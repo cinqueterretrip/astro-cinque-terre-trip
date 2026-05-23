@@ -1,0 +1,74 @@
+---
+import { createImageUrlBuilder } from "@sanity/image-url";
+import { sanityClient } from "sanity:client";
+import type { Locale } from "../lib/i18n/config";
+import { urlFor } from "../lib/sanity/image";
+import { PortableText } from "astro-portabletext";
+
+interface Props {
+  lang: Locale;
+  eyebrow?: string;
+  title: string;
+  text?: [];
+  backgroundImage: {
+    alt: string;
+    asset: {
+      _id: string;
+      url: string;
+      metadata: {
+        dimensions: { width: number; height: number };
+        lqip: string;
+      };
+    };
+  };
+}
+
+const { lang, eyebrow, title, text, backgroundImage } = Astro.props;
+---
+
+<section
+  class="relative h-screen w-full flex items-center justify-center overflow-hidden bg-primary-container"
+>
+  <img
+    alt="Panoramic view of Cinque Terre at sunset"
+    class="absolute inset-0 w-full h-full object-cover"
+    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbEnRgJhDJVjdxX31ZOuQ0YiRlz60y5g8_fZqR0BSJ6ogzpgG_B3Xk6nISEht5MlWDRPQWi-8c7vI2Z5kLJrAkuKryXQzUMd19dE-4ZMivEGg3Ly1ZkGUP9snlpU5xz37tDgU-GBp9pxRoA9OsVaspWUosFc6qnG9x8G3Rof0hHYzm8T6m9_xCYLXtjhVgpo2d0gvNlkhziQJnk0D9D4Lpbktrkkn1QQjTBv0RcekQCy9oq4vwSdeLCMHmUVz060icuT0ZBPwrbWDM"
+  />
+  <div class="absolute inset-0 bg-black/30"></div>
+  <div class="z-10 text-center max-w-4xl px-gutter">
+    {
+      eyebrow && (
+        <p class="font-label-sm text-label-sm text-white/90 uppercase tracking-widest mb-stack-md">
+          {eyebrow}
+        </p>
+      )
+    }
+    <h1
+      class="font-headline text-display-lg text-white mb-stack-lg leading-tight"
+    >
+      {title}
+    </h1>
+    {
+      text && (
+        <div class="font-body-lg text-body-lg text-white/80 mb-stack-xl max-w-2xl mx-auto">
+          <PortableText value={text} />
+        </div>
+      )
+    }
+    <!-- TODO: Aggiungere pulsanti per le lingue con le bandiere -->
+    <div class="flex items-center justify-center gap-stack-lg">
+      <a
+        href="#main-content"
+        class="bg-primary text-white px-8 py-4 rounded-DEFAULT font-body-md font-bold shadow-lg hover:shadow-xl transition-all"
+      >
+        Explore the Villages
+      </a>
+      <a
+        href="#"
+        class="border-b-2 border-white text-white px-4 py-4 font-body-md font-bold hover:bg-white/10 transition-all"
+      >
+        Read the Blog
+      </a>
+    </div>
+  </div>
+</section>

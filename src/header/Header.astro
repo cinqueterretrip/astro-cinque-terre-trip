@@ -1,0 +1,27 @@
+---
+import Navbar from "./Navbar.astro";
+---
+
+<header
+  class="bg-surface/90 backdrop-blur-md docked full-width top-0 sticky shadow-sm z-50"
+>
+  <div
+    class="flex justify-between items-center w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto h-20"
+  >
+    <!-- TODO: Aggiungere logo Instagram -->
+    <div class="font-headline text-headline-h3 text-secondary">
+      Cinque Terre Trip
+    </div>
+    <Navbar />
+    <div class="flex items-center gap-stack-md">
+      <span class="text-secondary font-label-sm text-label-sm cursor-pointer"
+        >IT | EN</span
+      >
+      <!-- <button
+        class="bg-primary text-white px-stack-lg py-2 rounded-DEFAULT font-label-sm text-label-sm hover:opacity-90 active:scale-95 transition-all"
+      >
+        Plan Your Trip
+      </button> -->
+    </div>
+  </div>
+</header>

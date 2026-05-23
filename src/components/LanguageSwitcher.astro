@@ -1,0 +1,45 @@
+---
+import {
+  LOCALES,
+  LOCALE_LABELS,
+  switchLocalePath,
+  type Locale,
+} from "../lib/i18n/config";
+
+// Riceve la pathname corrente dal layout padre
+interface Props {
+  currentPath: string;
+  currentLocale: Locale;
+}
+
+const { currentPath, currentLocale } = Astro.props;
+---
+
+<nav aria-label="Language switcher">
+  <ul class="flex gap-2">
+    {
+      LOCALES.map((locale) => {
+        const href = switchLocalePath(currentPath, locale);
+        const isActive = locale === currentLocale;
+
+        return (
+          <li>
+            <a
+              href={href}
+              aria-current={isActive ? "true" : undefined}
+              hreflang={locale}
+              class:list={[
+                "px-3 py-1 text-sm font-medium rounded transition-colors",
+                isActive
+                  ? "text-primary font-bold underline"
+                  : "text-white/70 hover:text-white",
+              ]}
+            >
+              {LOCALE_LABELS[locale]}
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</nav>
