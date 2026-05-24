@@ -1,0 +1,44 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../layouts/Hero.astro";
+import { fetchHomePage } from "../lib/sanity/queries/homePage";
+import type { Locale } from "../lib/i18n/config";
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const [page] = await Promise.all([fetchHomePage(lang)]);
+---
+
+<BaseLayout
+  title="Cinque Terre Trip"
+  description="Le migliori cinque terre da visitare in Italia"
+>
+  <script
+    slot="head"
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "TouristDestination",
+      name: "Cinque Terre",
+      description: "Five coastal villages in the Ligurian coast of Italy",
+      url: "https://www.cinqueterretrip.com",
+      touristType: ["Adventure", "Nature", "Cultural", "Hiking"],
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: 44.1461,
+        longitude: 9.6439,
+      },
+    })}
+  />
+  <Hero
+    lang={lang}
+    eyebrow={page.hero.eyebrow}
+    title={page.hero.title}
+    text={page.hero.text}
+    backgroundImage={page.hero.backgroundImage}
+  />
+  <main></main>
+</BaseLayout>

@@ -1,0 +1,13 @@
+---
+import HomePage from "../../models/HomePage.astro";
+import { getLocalePaths } from "../../lib/i18n/paths";
+import type { Locale } from "../../lib/i18n/config";
+
+export function getStaticPaths() {
+  return getLocalePaths();
+}
+
+const lang = (Astro.currentLocale ?? "it") as Locale;
+---
+
+<HomePage lang={lang} />

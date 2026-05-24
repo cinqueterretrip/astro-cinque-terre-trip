@@ -1,8 +1,6 @@
 ---
-import { createImageUrlBuilder } from "@sanity/image-url";
-import { sanityClient } from "sanity:client";
 import type { Locale } from "../lib/i18n/config";
-import { urlFor } from "../lib/sanity/image";
+import { heroImage } from "../lib/sanity/image";
 import { PortableText } from "astro-portabletext";
 
 interface Props {
@@ -24,15 +22,20 @@ interface Props {
 }
 
 const { lang, eyebrow, title, text, backgroundImage } = Astro.props;
+const image = heroImage(backgroundImage);
 ---
 
 <section
   class="relative h-screen w-full flex items-center justify-center overflow-hidden bg-primary-container"
 >
   <img
-    alt="Panoramic view of Cinque Terre at sunset"
     class="absolute inset-0 w-full h-full object-cover"
-    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbEnRgJhDJVjdxX31ZOuQ0YiRlz60y5g8_fZqR0BSJ6ogzpgG_B3Xk6nISEht5MlWDRPQWi-8c7vI2Z5kLJrAkuKryXQzUMd19dE-4ZMivEGg3Ly1ZkGUP9snlpU5xz37tDgU-GBp9pxRoA9OsVaspWUosFc6qnG9x8G3Rof0hHYzm8T6m9_xCYLXtjhVgpo2d0gvNlkhziQJnk0D9D4Lpbktrkkn1QQjTBv0RcekQCy9oq4vwSdeLCMHmUVz060icuT0ZBPwrbWDM"
+    src={image.src}
+    srcset={image.srcSet}
+    sizes={image.sizes}
+    alt={backgroundImage.alt}
+    loading="eager"
+    fetchpriority="high"
   />
   <div class="absolute inset-0 bg-black/30"></div>
   <div class="z-10 text-center max-w-4xl px-gutter">
