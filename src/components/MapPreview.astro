@@ -1,0 +1,50 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<section
+  class="relative w-full h-125 overflow-hidden flex items-center justify-center"
+>
+  <!-- Map Placeholder -->
+  <div class="absolute inset-0 z-0 bg-secondary">
+    <div
+      class="absolute inset-0 opacity-20"
+      style="
+            background-image: radial-gradient(#ffffff 2px, transparent 2px);
+            background-size: 60px 60px;
+          "
+    >
+    </div>
+    <div
+      class="absolute inset-0 opacity-10"
+      style="
+            background-image:
+              linear-gradient(#ffffff 1px, transparent 1px),
+              linear-gradient(90deg, #ffffff 1px, transparent 1px);
+            background-size: 100px 100px;
+          "
+    >
+    </div>
+  </div>
+  <!-- Content Overlay -->
+  <div
+    class="relative z-10 text-center bg-white/90 backdrop-blur-md p-stack-xl rounded-2xl shadow-2xl max-w-lg mx-gutter"
+  >
+    <Icon
+      name="material-symbols:location-on"
+      class="text-primary text-[48px] mb-stack-sm mx-auto"
+    />
+    <h2 class="font-headline text-headline-h2 mb-stack-md">
+      Explore Cinque Terre on the Map
+    </h2>
+    <p class="text-on-surface-variant mb-stack-lg">
+      Locate every train station, hiking trailhead, and the most iconic photo
+      viewpoints.
+    </p>
+    <button
+      class="bg-secondary text-white px-8 py-4 rounded-lg font-bold flex items-center gap-2 mx-auto hover:opacity-90"
+    >
+      Open Interactive Map
+    </button>
+  </div>
+</section>

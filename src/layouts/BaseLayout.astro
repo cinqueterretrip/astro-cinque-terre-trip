@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import { Font } from "astro:assets";
 import Header from "../header/Header.astro";
+import Footer from "./Footer.astro";
 
 interface Props {
   title: string;
@@ -91,5 +92,6 @@ const fullTitle = `${title} | Cinque Terre Trip`;
   <body class="font-body text-body bg-surface text-on-surface">
     <Header />
     <slot />
+    <Footer />
   </body>
 </html>

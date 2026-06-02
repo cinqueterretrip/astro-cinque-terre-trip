@@ -1,0 +1,127 @@
+---
+import { Icon } from "astro-icon/components";
+
+const itineraries = [
+  {
+    title: "The 48-Hour Classic",
+    description:
+      "Cover the main villages and the best viewpoints without the rush.",
+    tags: ["Relaxed", "Family Friendly"],
+    color: "bg-on-secondary-fixed-variant",
+  },
+  {
+    title: "The Hiker's Paradise",
+    description:
+      "Tackle the Blue Path and the higher sanctuaries for breathtaking views.",
+    tags: ["Active", "Nature"],
+    color: "bg-tertiary",
+  },
+  {
+    title: "Off-Season Magic",
+    description:
+      "Discover the authentic soul of the villages when the crowds disappear.",
+    tags: ["Quiet", "Winter/Spring"],
+    color: "bg-primary",
+  },
+  {
+    title: "Quiet Corners & Hidden Gems",
+    description:
+      "Get off the beaten path to find secret viewpoints, local eateries, and tranquil spots away from the crowds.",
+    tags: ["Quiet", "Winter/Spring"],
+    color: "bg-primary",
+  },
+];
+---
+
+<section
+  class="bg-surface py-stack-xl border-t border-outline-variant/30"
+  aria-labelledby="itineraries-heading"
+>
+  <div class="max-w-container-max mx-auto px-gutter">
+    <div class="flex items-center justify-between gap-4 mb-stack-xl">
+      <h2 id="itineraries-heading" class="font-headline text-headline-h1">
+        Perfect Itineraries
+      </h2>
+
+      <div class="flex gap-2">
+        <button
+          type="button"
+          class="embla-prev size-12 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-colors cursor-pointer"
+          aria-label="Previous itinerary"
+        >
+          <Icon name="material-symbols:chevron-left" class="text-2xl" />
+        </button>
+
+        <button
+          type="button"
+          class="embla-next size-12 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-colors cursor-pointer"
+          aria-label="Next itinerary"
+        >
+          <Icon name="material-symbols:chevron-right" class="text-2xl" />
+        </button>
+      </div>
+    </div>
+
+    <div class="embla overflow-hidden">
+      <div class="embla__container flex gap-stack-lg">
+        {
+          itineraries.map((item) => (
+            <article class="embla__slide flex-[0_0_100%] sm:flex-[0_0_calc(50%-0.5rem)] xl:flex-[0_0_calc(33.333%-1rem)] bg-white rounded-lg shadow-sm overflow-hidden flex flex-col">
+              <div class={`h-48 ${item.color} overflow-hidden`}>
+                <div class="w-full h-full opacity-50" />
+              </div>
+
+              <div class="p-stack-lg flex flex-col flex-1">
+                <h3 class="font-headline text-headline-h3 mb-stack-sm">
+                  {item.title}
+                </h3>
+
+                <div class="flex flex-wrap gap-2 mb-stack-md">
+                  {item.tags.map((tag) => (
+                    <span class="text-[11px] font-bold border border-outline-variant px-2 py-1 rounded">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                <p class="text-on-surface-variant mb-stack-lg flex-1">
+                  {item.description}
+                </p>
+
+                <button class="text-secondary font-bold inline-flex items-center gap-2">
+                  View Itinerary
+                  <Icon
+                    name="material-symbols:chevron-right"
+                    class="text-[18px]"
+                  />
+                </button>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import EmblaCarousel from "embla-carousel";
+
+  const emblaNode = document.querySelector<HTMLElement>(".embla");
+
+  if (emblaNode) {
+    const embla = EmblaCarousel(emblaNode, {
+      align: "start",
+      loop: false,
+      dragFree: false,
+    });
+
+    document
+      .querySelector(".embla-prev")
+      ?.addEventListener("click", () => embla.scrollPrev());
+
+    document
+      .querySelector(".embla-next")
+      ?.addEventListener("click", () => embla.scrollNext());
+  }
+</script>

@@ -1,6 +1,14 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../layouts/Hero.astro";
+import VillagesList from "../components/VillagesList.astro";
+import Weather from "../components/Weather.astro";
+import ExperiencesList from "../components/ExperiencesList.astro";
+import GastronomyList from "../components/GastronomyList.astro";
+import HikingList from "../components/HikingList.astro";
+import TipsList from "../components/TipsList.astro";
+import Channel from "../components/Channel.astro";
+import MapPreview from "../components/MapPreview.astro";
 import { fetchHomePage } from "../lib/sanity/queries/homePage";
 import type { Locale } from "../lib/i18n/config";
 
@@ -40,5 +48,14 @@ const [page] = await Promise.all([fetchHomePage(lang)]);
     text={page.hero.text}
     backgroundImage={page.hero.backgroundImage}
   />
-  <main></main>
+  <main id="main-content">
+    <VillagesList lang={lang} />
+    <Weather />
+    <ExperiencesList />
+    <GastronomyList />
+    <HikingList />
+    <TipsList />
+    <Channel />
+    <MapPreview />
+  </main>
 </BaseLayout>

@@ -49,6 +49,7 @@
   --color-on-secondary-container: #2b5c80;
   --color-on-background: #1d1b16;
   --color-inverse-on-surface: #f6f0e7;
+  --color-line-soft: #e5e7eb;
 
   /* BORDER RADIUS */
   --radius-default: 4px;

@@ -1,0 +1,77 @@
+---
+import { Icon } from "astro-icon/components";
+import type { Locale } from "../lib/i18n/config";
+import { getLocalePath } from "../lib/i18n/config";
+import { cardImage } from "../lib/sanity/image";
+import { fetchVillageCards } from "../lib/sanity/queries/villages";
+
+interface Props {
+  lang: Locale;
+}
+
+interface VillageCard {
+  _id: string;
+  title: string;
+  tagline?: string;
+  slug: string;
+  heroImage: {
+    alt?: string;
+    asset: {
+      _id: string;
+      url: string;
+      metadata: {
+        dimensions: { width: number; height: number };
+        lqip?: string;
+      };
+    };
+  };
+}
+
+const { lang } = Astro.props;
+
+const villages: VillageCard[] = await fetchVillageCards(lang);
+
+function getVillageHref(locale: Locale, slug: string) {
+  return getLocalePath(locale, `/villages/${encodeURIComponent(slug)}`);
+}
+---
+
+<section class="py-stack-xl max-w-container-max mx-auto px-gutter">
+  <div class="grid grid-cols-1 md:grid-cols-5 gap-stack-md">
+    {
+      villages.map((village) => {
+        const image = cardImage(village.heroImage);
+        const href = getVillageHref(lang, village.slug);
+
+        return (
+          <article class="group cursor-pointer">
+            <div class="aspect-3/4 rounded-lg mb-stack-sm overflow-hidden bg-surface-container">
+              <img
+                alt={village.heroImage.alt || village.title}
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                src={image.src}
+                srcset={image.srcSet}
+                sizes={image.sizes}
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <h3 class="font-headline-h3 text-headline-h3 mb-stack-xs group-hover:text-primary transition-colors">
+              {village.title}
+            </h3>
+            <p class="text-on-surface-variant text-sm mb-stack-sm">
+              {village.tagline}
+            </p>
+            <a
+              class="text-primary font-bold text-label-sm inline-flex items-center gap-2 group"
+              href={href}
+            >
+              Explore{" "}
+              <Icon name="material-symbols:arrow-forward" class="text-body" />
+            </a>
+          </article>
+        );
+      })
+    }
+  </div>
+</section>
