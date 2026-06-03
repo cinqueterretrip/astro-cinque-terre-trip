@@ -21,7 +21,8 @@ export async function fetchHomePage(lang: Locale) {
             }
           }
         }
-      }
+      },
+      seo
     }`,
     { id: `homePage-${lang}` },
   );

@@ -20,10 +20,7 @@ const { lang } = Astro.props;
 const [page] = await Promise.all([fetchHomePage(lang)]);
 ---
 
-<BaseLayout
-  title="Cinque Terre Trip"
-  description="Le migliori cinque terre da visitare in Italia"
->
+<BaseLayout title={page.seo.title} description={page.seo.description}>
   <script
     slot="head"
     type="application/ld+json"
@@ -51,7 +48,7 @@ const [page] = await Promise.all([fetchHomePage(lang)]);
   <main id="main-content">
     <VillagesList lang={lang} />
     <Weather />
-    <ExperiencesList />
+    <!-- <ExperiencesList /> -->
     <GastronomyList />
     <HikingList />
     <TipsList />

@@ -4,6 +4,7 @@ import type { Locale } from "../lib/i18n/config";
 import { getLocalePath } from "../lib/i18n/config";
 import { cardImage } from "../lib/sanity/image";
 import { fetchVillageCards } from "../lib/sanity/queries/villages";
+import { t } from "../lib/i18n/ui";
 
 interface Props {
   lang: Locale;
@@ -30,9 +31,16 @@ interface VillageCard {
 const { lang } = Astro.props;
 
 const villages: VillageCard[] = await fetchVillageCards(lang);
+const localePath: Record<Locale, string> = {
+  it: "/borghi",
+  en: "/villages",
+};
 
 function getVillageHref(locale: Locale, slug: string) {
-  return getLocalePath(locale, `/villages/${encodeURIComponent(slug)}`);
+  return getLocalePath(
+    locale,
+    `${localePath[locale]}/${encodeURIComponent(slug)}`,
+  );
 }
 ---
 
@@ -66,7 +74,7 @@ function getVillageHref(locale: Locale, slug: string) {
               class="text-primary font-bold text-label-sm inline-flex items-center gap-2 group"
               href={href}
             >
-              Explore{" "}
+              {t(lang, "villages.cta")}{" "}
               <Icon name="material-symbols:arrow-forward" class="text-body" />
             </a>
           </article>

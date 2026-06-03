@@ -2,6 +2,7 @@
 import type { Locale } from "../lib/i18n/config";
 import { heroImage } from "../lib/sanity/image";
 import { PortableText } from "astro-portabletext";
+import { t } from "../lib/i18n/ui";
 
 interface Props {
   lang: Locale;
@@ -64,13 +65,13 @@ const image = heroImage(backgroundImage);
         href="#main-content"
         class="bg-primary text-white px-8 py-4 rounded-DEFAULT font-body-md font-bold shadow-lg hover:shadow-xl transition-all"
       >
-        Explore the Villages
+        {t(lang, "hero.cta")}
       </a>
       <a
         href="#"
         class="border-b-2 border-white text-white px-4 py-4 font-body-md font-bold hover:bg-white/10 transition-all"
       >
-        Read the Blog
+        {t(lang, "hero.readBlog")}
       </a>
     </div>
   </div>
