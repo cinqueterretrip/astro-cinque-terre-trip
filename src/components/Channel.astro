@@ -1,3 +1,8 @@
+---
+import { Picture } from "astro:assets";
+import profileImage from "../assets/images/profile.jpg";
+---
+
 <section
   class="max-w-300 mx-auto my-stack-xl bg-secondary rounded-2xl py-stack-xl px-gutter text-center text-white"
 >
@@ -10,12 +15,15 @@
   </p>
 
   <div class="flex flex-col items-center gap-4">
-    <img
-      src="https://unavatar.io/instagram/cinqueterretrip"
-      alt="cinqueterretrip Instagram profile picture"
+    <Picture
+      src={profileImage}
+      alt="Profile picture of Cinque Terre Trip Instagram channel"
+      width={80}
+      height={80}
       class="w-20 h-20 rounded-full border-2 border-white/30 object-cover"
       loading="lazy"
       decoding="async"
+      formats={["avif", "webp"]}
     />
 
     <p class="text-white/90 font-bold text-lg">@cinqueterretrip</p>
