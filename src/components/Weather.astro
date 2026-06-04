@@ -1,5 +1,5 @@
 ---
-import { Icon } from "astro-icon/components";
+import { LightMode, PartlyCloudyDay, Rainy } from "../icons";
 ---
 
 <section class="bg-surface-container-low py-stack-xl">
@@ -30,10 +30,7 @@ import { Icon } from "astro-icon/components";
             <span class="font-bold text-on-surface-variant mb-stack-sm"
               >Today</span
             >
-            <Icon
-              name="material-symbols:light-mode"
-              class="text-tertiary text-[40px] mb-stack-sm"
-            />
+            <LightMode className="text-tertiary mb-stack-sm" dimension="40px" />
             <div class="flex gap-2 font-bold mb-1">
               <span class="text-on-surface">26°</span>
               <span class="text-on-surface-variant/60">19°</span>
@@ -47,9 +44,9 @@ import { Icon } from "astro-icon/components";
             <span class="font-bold text-on-surface-variant mb-stack-sm"
               >Tomorrow</span
             >
-            <Icon
-              name="material-symbols:partly-cloudy-day"
-              class="text-tertiary text-[40px] mb-stack-sm"
+            <PartlyCloudyDay
+              className="text-tertiary mb-stack-sm"
+              dimension="40px"
             />
             <div class="flex gap-2 font-bold mb-1">
               <span class="text-on-surface">24°</span>
@@ -64,10 +61,7 @@ import { Icon } from "astro-icon/components";
             <span class="font-bold text-on-surface-variant mb-stack-sm"
               >Thursday</span
             >
-            <Icon
-              name="material-symbols:sunny-snowing"
-              class="text-tertiary text-[40px] mb-stack-sm"
-            />
+            <Rainy className="text-tertiary mb-stack-sm" dimension="40px" />
             <div class="flex gap-2 font-bold mb-1">
               <span class="text-on-surface">25°</span>
               <span class="text-on-surface-variant/60">17°</span>

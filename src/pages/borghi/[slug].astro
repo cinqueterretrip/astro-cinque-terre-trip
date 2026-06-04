@@ -1,0 +1,76 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Hero from "../../layouts/Hero.astro";
+import Villages from "../../models/Villages.astro";
+import type { Locale } from "../../lib/i18n/config";
+import { fetchVillages } from "../../lib/sanity/queries/villages";
+
+interface Village {
+  _id: string;
+  title: string;
+  subtitle?: string;
+  slug: string;
+  tagline?: string;
+  text?: [];
+  quickFacts?: {
+    population?: string;
+    bestKnown?: string;
+    connection?: [];
+  };
+  foodSpeciality?: {
+    title?: string;
+    text?: [];
+    image?: {
+      alt?: string;
+      asset: {
+        _id: string;
+        url: string;
+        metadata: {
+          dimensions: { width: number; height: number };
+          lqip?: string;
+        };
+      };
+    };
+  };
+  heroImage: {
+    alt?: string;
+    asset: {
+      _id: string;
+      url: string;
+      metadata: {
+        dimensions: { width: number; height: number };
+        lqip?: string;
+      };
+    };
+  };
+  order?: number;
+  seo: {
+    title: string;
+    description: string;
+  };
+}
+
+interface Props {
+  lang: Locale;
+  village: Village;
+}
+
+const lang = (Astro.currentLocale ?? "it") as Locale;
+const village: Village[] = await fetchVillages(lang);
+
+export async function getStaticPaths() {
+  const lang: Locale = "it";
+  const villages: Village[] = await fetchVillages(lang);
+
+  return villages.map((village) => ({
+    params: { slug: village.slug },
+    props: { lang, village },
+  }));
+}
+---
+
+<BaseLayout title="Cinque Terre" description="Terre">
+  <main id="main-content">
+    <Villages />
+  </main>
+</BaseLayout>

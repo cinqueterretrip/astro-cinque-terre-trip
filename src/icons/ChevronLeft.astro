@@ -1,0 +1,20 @@
+---
+interface Props {
+  className?: string;
+  dimension?: string | "24px";
+}
+
+const { className, dimension = "24px" } = Astro.props;
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 -960 960 960"
+  width={dimension}
+  height={dimension}
+  fill="currentColor"
+  class={className}
+  ><path
+    d="M560-253.85 333.85-480 560-706.15 602.15-664l-184 184 184 184L560-253.85Z"
+  ></path></svg
+>

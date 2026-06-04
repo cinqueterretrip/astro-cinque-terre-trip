@@ -1,5 +1,5 @@
 ---
-import { Icon } from "astro-icon/components";
+import ArrowForward from "../icons/ArrowForward.astro";
 import type { Locale } from "../lib/i18n/config";
 import { getLocalePath } from "../lib/i18n/config";
 import { cardImage } from "../lib/sanity/image";
@@ -74,8 +74,7 @@ function getVillageHref(locale: Locale, slug: string) {
               class="text-primary font-bold text-label-sm inline-flex items-center gap-2 group"
               href={href}
             >
-              {t(lang, "villages.cta")}{" "}
-              <Icon name="material-symbols:arrow-forward" class="text-body" />
+              {t(lang, "villages.cta")} <ArrowForward dimension="16px" />
             </a>
           </article>
         );

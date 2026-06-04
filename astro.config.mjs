@@ -5,7 +5,6 @@ import { defineConfig, fontProviders } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import sanity from "@sanity/astro";
 import vercel from "@astrojs/vercel";
-import icon from "astro-icon";
 
 // https://astro.build/config
 export default defineConfig({
@@ -34,7 +33,6 @@ export default defineConfig({
     },
   ],
   integrations: [
-    icon(),
     sitemap({
       i18n: {
         defaultLocale: "it",

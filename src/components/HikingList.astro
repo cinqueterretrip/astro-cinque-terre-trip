@@ -1,5 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
+import { ChevronLeft, ChevronRight } from "../icons";
 
 const itineraries = [
   {
@@ -49,7 +50,7 @@ const itineraries = [
           class="embla-prev size-12 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-colors cursor-pointer"
           aria-label="Previous itinerary"
         >
-          <Icon name="material-symbols:chevron-left" class="text-2xl" />
+          <ChevronLeft />
         </button>
 
         <button
@@ -57,7 +58,7 @@ const itineraries = [
           class="embla-next size-12 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-colors cursor-pointer"
           aria-label="Next itinerary"
         >
-          <Icon name="material-symbols:chevron-right" class="text-2xl" />
+          <ChevronRight />
         </button>
       </div>
     </div>
@@ -90,10 +91,7 @@ const itineraries = [
 
                 <button class="text-secondary font-bold inline-flex items-center gap-2">
                   View Itinerary
-                  <Icon
-                    name="material-symbols:chevron-right"
-                    class="text-[18px]"
-                  />
+                  <ChevronRight dimension="18px" />
                 </button>
               </div>
             </article>
