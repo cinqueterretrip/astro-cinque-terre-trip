@@ -5,6 +5,18 @@ import Villages from "../../models/Villages.astro";
 import type { Locale } from "../../lib/i18n/config";
 import { fetchVillages } from "../../lib/sanity/queries/villages";
 
+type Image = {
+  alt?: string;
+  asset: {
+    _id: string;
+    url: string;
+    metadata: {
+      dimensions: { width: number; height: number };
+      lqip?: string;
+    };
+  };
+};
+
 interface Village {
   _id: string;
   title: string;
@@ -20,29 +32,9 @@ interface Village {
   foodSpeciality?: {
     title?: string;
     text?: [];
-    image?: {
-      alt?: string;
-      asset: {
-        _id: string;
-        url: string;
-        metadata: {
-          dimensions: { width: number; height: number };
-          lqip?: string;
-        };
-      };
-    };
+    image?: Image;
   };
-  heroImage: {
-    alt?: string;
-    asset: {
-      _id: string;
-      url: string;
-      metadata: {
-        dimensions: { width: number; height: number };
-        lqip?: string;
-      };
-    };
-  };
+  heroImage: Image;
   order?: number;
   seo: {
     title: string;
