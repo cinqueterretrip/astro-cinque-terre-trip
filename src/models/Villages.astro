@@ -2,8 +2,8 @@
 import { PortableText } from "astro-portabletext";
 import { cardImage } from "../lib/sanity/image";
 import type { Locale } from "../lib/i18n/config";
-import { t } from "../lib/i18n/ui";
-import { Info, Train, Boat } from "../icons";
+import { t, type UIKey } from "../lib/i18n/ui";
+import { Info, Train, Boat, DirectionsBus, DirectionsCar } from "../icons";
 
 type Image = {
   alt?: string;
@@ -116,6 +116,8 @@ const connections = village.quickFacts?.connections ?? [];
                     const normalized = normalizeConnection(connection);
                     const showTrain = normalized.includes("train-station");
                     const showBoat = normalized.includes("boat");
+                    const showBus = normalized.includes("bus");
+                    const showCar = normalized.includes("car");
 
                     return (
                       <span class="flex items-center gap-1 font-body-md font-bold">
@@ -125,7 +127,20 @@ const connections = village.quickFacts?.connections ?? [];
                         {showBoat && (
                           <Boat className="text-secondary" dimension="18px" />
                         )}
-                        {connection}
+                        {showBus && (
+                          <DirectionsBus
+                            className="text-secondary"
+                            dimension="18px"
+                          />
+                        )}
+                        {showCar && (
+                          <DirectionsCar
+                            className="text-secondary"
+                            dimension="18px"
+                          />
+                        )}
+                        {t(lang, `villages.${normalized}` as UIKey) ||
+                          connection}
                       </span>
                     );
                   })

@@ -11,6 +11,8 @@ const ui = {
     "villages.bestKnown": "Famoso per",
     "villages.connection": "Collegamenti",
     "villages.gastronomy": "Gastronomia",
+    "villages.car": "Macchina",
+    "villages.bus": "Bus",
     "villages.train-station": "Treno",
     "villages.boat": "Barca",
     "footer.tagline":
@@ -28,6 +30,8 @@ const ui = {
     "villages.gastronomy": "Gastronomy",
     "villages.train-station": "Train",
     "villages.boat": "Boat",
+    "villages.bus": "Bus",
+    "villages.car": "Car",
     "footer.tagline":
       "Your ultimate guide to exploring the five villages of the Italian Riviera.",
   },

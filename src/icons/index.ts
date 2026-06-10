@@ -2,6 +2,8 @@ export { default as ArrowForward } from "./ArrowForward.astro";
 export { default as Boat } from "./Boat.astro";
 export { default as ChevronLeft } from "./ChevronLeft.astro";
 export { default as ChevronRight } from "./ChevronRight.astro";
+export { default as DirectionsBus } from "./DirectionsBus.astro";
+export { default as DirectionsCar } from "./DirectionsCar.astro";
 export { default as Info } from "./Info.astro";
 export { default as LightMode } from "./LightMode.astro";
 export { default as LocationOn } from "./LocationOn.astro";
