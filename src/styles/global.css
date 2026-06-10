@@ -76,6 +76,7 @@
   --text-headline-h1: 48px;
   --text-headline-h2: 32px;
   --text-headline-h3: 24px;
+  --text-headline-h4: 20px;
   --text-body: 16px;
   --text-body-lg: 18px;
   --text-label-sm: 13px;
@@ -94,6 +95,9 @@
   --text-headline-h3--line-height: 1.4;
   --text-headline-h3--font-weight: 600;
 
+  --text-headline-h4--line-height: 1.4;
+  --text-headline-h4--font-weight: 600;
+
   --text-body-md--line-height: 1.6;
   --text-body-md--font-weight: 400;
 
@@ -103,4 +107,14 @@
   --text-label-sm--line-height: 1.2;
   --text-label-sm--letter-spacing: 0.05em;
   --text-label-sm--font-weight: 600;
+}
+
+.main-text {
+  h3 {
+    @apply text-headline-h3 font-headline text-on-surface my-8;
+  }
+
+  h4 {
+    @apply text-headline-h4 text-on-surface;
+  }
 }

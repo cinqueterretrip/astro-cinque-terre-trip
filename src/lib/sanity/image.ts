@@ -48,6 +48,21 @@ export function heroImage(img: SanityImageSource) {
 }
 
 /**
+ * POSTER IMAGE
+ */
+export function posterImage(img: SanityImageSource) {
+  return {
+    src: base(img).width(800).height(800).url(),
+
+    srcSet: buildSrcSet(img, [400, 600, 800], (i, s) =>
+      base(i).width(s).height(s).url(),
+    ),
+
+    sizes: "100vw",
+  };
+}
+
+/**
  * CARD IMAGE
  */
 export function cardImage(img: SanityImageSource) {

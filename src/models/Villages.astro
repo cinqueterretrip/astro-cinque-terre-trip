@@ -1,6 +1,6 @@
 ---
 import { PortableText } from "astro-portabletext";
-import { cardImage } from "../lib/sanity/image";
+import { posterImage } from "../lib/sanity/image";
 import type { Locale } from "../lib/i18n/config";
 import { t, type UIKey } from "../lib/i18n/ui";
 import { Info, Train, Boat, DirectionsBus, DirectionsCar } from "../icons";
@@ -45,7 +45,7 @@ const foodTextBlocks = Array.isArray(village.foodSpeciality?.text)
   ? village.foodSpeciality.text
   : [];
 const foodImage = village.foodSpeciality?.image?.asset
-  ? cardImage(village.foodSpeciality.image)
+  ? posterImage(village.foodSpeciality.image)
   : null;
 
 function normalizeConnection(value: string) {
@@ -67,7 +67,7 @@ const connections = village.quickFacts?.connections ?? [];
         {village.subtitle ?? village.title}
       </h2>
       <div
-        class="space-y-stack-md text-on-surface-variant font-body-lg leading-relaxed"
+        class="space-y-stack-md text-on-surface-variant font-body-lg leading-relaxed main-text"
       >
         {
           villageTextBlocks.length > 0 ? (
