@@ -1,9 +1,10 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import HeroVillages from "../../layouts/HeroVillages.astro";
-import Villages from "../../models/Villages.astro";
-import type { Locale } from "../../lib/i18n/config";
-import { fetchVillages } from "../../lib/sanity/queries/villages";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import HeroVillages from "../../../layouts/HeroVillages.astro";
+import Villages from "../../../models/Villages.astro";
+import type { Locale } from "../../../lib/i18n/config";
+import { getLocalePaths } from "../../../lib/i18n/paths";
+import { fetchVillages } from "../../../lib/sanity/queries/villages";
 
 type Image = {
   alt?: string;
@@ -62,13 +63,21 @@ const heroBackgroundImage = {
 };
 
 export async function getStaticPaths() {
-  const lang: Locale = "it";
-  const villages: Village[] = await fetchVillages(lang);
+  const localePaths = getLocalePaths() as Array<{ params: { lang: Locale } }>;
 
-  return villages.map((village) => ({
-    params: { slug: village.slug },
-    props: { lang, village },
-  }));
+  const paths = await Promise.all(
+    localePaths.map(async ({ params }) => {
+      const lang = params.lang;
+      const villages: Village[] = await fetchVillages(lang);
+
+      return villages.map((village) => ({
+        params: { lang, slug: village.slug },
+        props: { lang, village },
+      }));
+    }),
+  );
+
+  return paths.flat();
 }
 ---
 

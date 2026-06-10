@@ -159,13 +159,13 @@ const connections = village.quickFacts?.connections ?? [];
   class="max-w-container-max mx-auto px-margin-mobile md:px-gutter py-stack-xl"
 >
   <div
-    class="bg-white rounded-xl overflow-hidden editorial-shadow grid grid-cols-1 md:grid-cols-2 items-center"
+    class="bg-white rounded-xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.08)] grid grid-cols-1 md:grid-cols-2 items-center"
   >
     <div class="p-stack-xl">
       <span class="text-secondary uppercase tracking-wider mb-stack-sm block"
         >{t(lang, "villages.gastronomy")}</span
       >
-      <h2 class="font-headline text-headline-h2 mb-stack-md italic">
+      <h2 class="font-headline font-semibold text-headline-h2 mb-stack-md">
         {village.foodSpeciality?.title ?? village.title}
       </h2>
       <div
