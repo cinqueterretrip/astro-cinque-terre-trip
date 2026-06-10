@@ -1,8 +1,9 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import Hero from "../../layouts/Hero.astro";
+import HeroVillages from "../../layouts/HeroVillages.astro";
 import Villages from "../../models/Villages.astro";
 import type { Locale } from "../../lib/i18n/config";
+import { LOCALES } from "../../lib/i18n/config";
 import { fetchVillages } from "../../lib/sanity/queries/villages";
 
 type Image = {
@@ -19,6 +20,7 @@ type Image = {
 
 interface Village {
   _id: string;
+  language?: Locale;
   title: string;
   subtitle?: string;
   slug: string;
@@ -27,7 +29,7 @@ interface Village {
   quickFacts?: {
     population?: string;
     bestKnown?: string;
-    connection?: [];
+    connections?: string[];
   };
   foodSpeciality?: {
     title?: string;
@@ -47,22 +49,51 @@ interface Props {
   village: Village;
 }
 
-const lang = (Astro.currentLocale ?? "it") as Locale;
-const village: Village[] = await fetchVillages(lang);
+const { village } = Astro.props as Props;
+const lang = (Astro.currentLocale ?? village.language ?? "it") as Locale;
+const heroBackgroundImage = {
+  ...village.heroImage,
+  alt: village.heroImage.alt ?? village.title,
+  asset: {
+    ...village.heroImage.asset,
+    metadata: {
+      ...village.heroImage.asset.metadata,
+      lqip: village.heroImage.asset.metadata.lqip ?? "",
+    },
+  },
+};
 
 export async function getStaticPaths() {
-  const lang: Locale = "it";
-  const villages: Village[] = await fetchVillages(lang);
+  const paths = await Promise.all(
+    LOCALES.map(async (lang) => {
+      const villages: Village[] = await fetchVillages(lang);
 
-  return villages.map((village) => ({
-    params: { slug: village.slug },
-    props: { lang, village },
-  }));
+      return villages.map((village) => ({
+        params: { slug: village.slug },
+        props: { lang, village },
+      }));
+    }),
+  );
+
+  return paths.flat();
 }
 ---
 
-<BaseLayout title="Cinque Terre" description="Terre">
+<BaseLayout
+  title={village.seo?.title ?? village.title}
+  description={village.seo?.description ??
+    village.tagline ??
+    village.subtitle ??
+    ""}
+  locale={lang}
+>
+  <HeroVillages
+    subtitle={village.subtitle}
+    title={village.title}
+    tagline={village.tagline}
+    backgroundImage={heroBackgroundImage}
+  />
   <main id="main-content">
-    <Villages />
+    <Villages village={village} lang={lang} />
   </main>
 </BaseLayout>
