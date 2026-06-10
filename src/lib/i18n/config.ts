@@ -1,3 +1,5 @@
+import { ROUTE_MAP } from "./routes";
+
 export const LOCALES = ["it", "en"] as const;
 export type Locale = (typeof LOCALES)[number];
 export const DEFAULT_LOCALE: Locale = "it";
@@ -21,5 +23,20 @@ export function switchLocalePath(
 ): string {
   // Rimuove il prefisso /en se presente
   const stripped = currentPath.replace(/^\/en(\/|$)/, "/");
-  return getLocalePath(targetLocale, stripped || "/");
+
+  // Costruisce la mappa inversa dai segmenti di tutte le lingue verso targetLocale
+  const segmentMap: Record<string, string> = {};
+  for (const variants of Object.values(ROUTE_MAP)) {
+    const toSegment = variants[targetLocale];
+    for (const fromSegment of Object.values(variants)) {
+      segmentMap[fromSegment] = toSegment;
+    }
+  }
+
+  const translated = stripped
+    .split("/")
+    .map((seg) => segmentMap[seg] ?? seg)
+    .join("/");
+
+  return getLocalePath(targetLocale, translated || "/");
 }
