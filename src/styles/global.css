@@ -111,7 +111,7 @@
 
 .main-text {
   h3 {
-    @apply text-headline-h3 font-headline text-on-surface my-8;
+    @apply text-headline-h3 font-headline text-secondary my-8;
   }
 
   h4 {
