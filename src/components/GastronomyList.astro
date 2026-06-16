@@ -1,64 +1,210 @@
+---
+import { fetchVillages } from "../lib/sanity/queries/villages";
+import { posterImage } from "../lib/sanity/image";
+import type { Locale } from "../lib/i18n/config";
+
+interface Props {
+  lang: Locale;
+}
+
+type PortableTextSpan = {
+  _type: "span";
+  text?: string;
+};
+
+type PortableTextBlock = {
+  _type: "block";
+  children?: PortableTextSpan[];
+};
+
+type SanityImage = {
+  alt?: string;
+  asset?: {
+    _id: string;
+    url: string;
+    metadata?: {
+      dimensions?: { width: number; height: number };
+      lqip?: string;
+    };
+  };
+};
+
+type VillageRaw = {
+  foodSpeciality?: {
+    title?: string;
+    text?: unknown;
+    image?: SanityImage;
+  };
+};
+
+type FoodItem = {
+  title: string;
+  text: string;
+  src: string;
+  srcSet: string;
+  sizes: string;
+  alt: string;
+};
+
+function extractFirstSentence(blocks: unknown): string {
+  if (typeof blocks === "string") {
+    const idx = blocks.indexOf(".");
+    return idx !== -1 ? blocks.slice(0, idx + 1) : blocks;
+  }
+  if (!Array.isArray(blocks)) return "";
+  let accumulated = "";
+  for (const block of blocks as PortableTextBlock[]) {
+    if (block?._type !== "block" || !Array.isArray(block.children)) continue;
+    for (const child of block.children) {
+      if (typeof child?.text !== "string") continue;
+      accumulated += child.text;
+      const idx = accumulated.indexOf(".");
+      if (idx !== -1) return accumulated.slice(0, idx + 1);
+    }
+    accumulated += " ";
+  }
+  return accumulated.trim();
+}
+
+const { lang } = Astro.props;
+const villages = await fetchVillages(lang);
+
+const foodItems: FoodItem[] = (villages as VillageRaw[])
+  .filter(
+    (
+      v,
+    ): v is VillageRaw & {
+      foodSpeciality: {
+        image: SanityImage & { asset: NonNullable<SanityImage["asset"]> };
+      };
+    } => v.foodSpeciality?.image?.asset != null,
+  )
+  .map((v) => {
+    const food = v.foodSpeciality as {
+      title?: string;
+      text?: unknown;
+      image: SanityImage;
+    };
+    const img = posterImage(food.image);
+    return {
+      title: food.title ?? "",
+      text: extractFirstSentence(food.text),
+      src: img.src,
+      srcSet: img.srcSet,
+      sizes: img.sizes,
+      alt: food.image.alt ?? food.title ?? "",
+    };
+  });
+---
+
 <section
   class="py-stack-xl max-w-container-max mx-auto px-gutter grid grid-cols-1 md:grid-cols-2 gap-stack-xl items-center"
 >
+  <!-- Left: image panel -->
   <div
-    class="rounded-xl overflow-hidden shadow-2xl relative group h-150 bg-secondary"
+    class="rounded-xl overflow-hidden shadow-2xl relative h-150 bg-secondary"
   >
-    <img
-      alt="Traditional Ligurian food"
-      class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-      src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnIWFiCCA7TvpZK8lG3vzUa_4zKu67ikrfebOi4bA9i2stCprCHX_4I50oVmUQMfdBBaBLNv-5PSzpCks6YUlKplhp_IXv0FQDtC9_6-hlRwAFCTfmGGbPDpWNujUOQj0yua6-WVQQMuxj7Sj8CCXSdlJxBnQXPsiqbo2Gn8wnCe2IwpgPWC8wk-mW0IeIedrM_L488BdI1GQsrVc4oMO8SX5FO-7gbacTvrSuLu0wehHo3YNY0wQqdefFgoS8tA0QdKpbflhzqsAD"
-    />
-    <div
-      class="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-all"
-    >
-    </div>
-    <div class="absolute bottom-stack-lg left-stack-lg">
+    {
+      foodItems.map((item, i) => (
+        <img
+          data-gastro-img={i}
+          src={item.src}
+          srcset={item.srcSet}
+          sizes={item.sizes}
+          alt={item.alt}
+          class:list={[
+            "absolute inset-0 w-full h-full object-cover transition-opacity duration-500",
+            i === 0 ? "opacity-100" : "opacity-0",
+          ]}
+          loading={i === 0 ? "eager" : "lazy"}
+          decoding="async"
+        />
+      ))
+    }
+    <div class="absolute inset-0 bg-black/30 pointer-events-none"></div>
+    <div class="absolute bottom-stack-lg left-stack-lg pointer-events-none">
       <span
         class="text-white/80 font-label-sm text-label-sm uppercase tracking-widest mb-2 block"
         >Gastronomy</span
       >
-      <h3 class="text-white font-headline-h2 text-headline-h2">
-        A Taste of the Riviera
+      <h3
+        id="gastro-active-title"
+        class="text-white font-headline text-headline-h2"
+      >
+        {foodItems[0]?.title ?? ""}
       </h3>
     </div>
   </div>
+
+  <!-- Right: food items list -->
   <div class="space-y-stack-lg">
-    <div>
-      <h4 class="font-headline text-headline-h3 text-primary mb-2">
-        Acciughe di Monterosso
-      </h4>
-      <p class="text-on-surface-variant">
-        Salted anchovies prepared according to ancient local traditions. Best
-        enjoyed with a slice of bread and butter.
-      </p>
-    </div>
-    <div>
-      <h4 class="font-headline text-headline-h3 text-primary mb-2">
-        Trofie al Pesto
-      </h4>
-      <p class="text-on-surface-variant">
-        The classic Ligurian pasta. Hand-rolled spirals served with fresh basil
-        pesto, potatoes, and green beans.
-      </p>
-    </div>
-    <div>
-      <h4 class="font-headline text-headline-h3 text-primary mb-2">
-        Sciacchetrà Wine
-      </h4>
-      <p class="text-on-surface-variant">
-        A rare and precious sweet passito wine produced only in this region from
-        sun-dried grapes.
-      </p>
-    </div>
-    <div>
-      <h4 class="font-headline text-headline-h3 text-primary mb-2">
-        Focaccia Ligure
-      </h4>
-      <p class="text-on-surface-variant">
-        Thick, oily, and perfectly salted. The ultimate street food while
-        wandering through the carruggi.
-      </p>
-    </div>
+    {
+      foodItems.map((item, i) => (
+        <div
+          data-gastro-item={i}
+          class:list={[
+            "border-l-2 pl-stack-sm transition-all duration-200 cursor-default",
+            i === 0 ? "border-primary" : "border-transparent",
+          ]}
+        >
+          <h4
+            class:list={[
+              "font-headline text-headline-h3 mb-2 transition-colors duration-200",
+              i === 0 ? "text-secondary" : "text-primary",
+            ]}
+          >
+            {item.title}
+          </h4>
+          <p
+            class:list={[
+              "transition-colors duration-200",
+              i === 0 ? "text-on-surface" : "text-on-surface-variant",
+            ]}
+          >
+            {item.text}
+          </p>
+        </div>
+      ))
+    }
   </div>
 </section>
+
+<script>
+  const items = document.querySelectorAll<HTMLElement>("[data-gastro-item]");
+  const images =
+    document.querySelectorAll<HTMLImageElement>("[data-gastro-img]");
+  const activeTitle = document.getElementById("gastro-active-title");
+
+  function activate(index: number): void {
+    images.forEach((img, i) => {
+      img.classList.toggle("opacity-100", i === index);
+      img.classList.toggle("opacity-0", i !== index);
+    });
+
+    items.forEach((item, i) => {
+      const isActive = i === index;
+      item.classList.toggle("border-primary", isActive);
+      item.classList.toggle("border-transparent", !isActive);
+
+      const heading = item.querySelector<HTMLElement>("h4");
+      heading?.classList.toggle("text-secondary", isActive);
+      heading?.classList.toggle("text-primary", !isActive);
+
+      const paragraph = item.querySelector<HTMLElement>("p");
+      paragraph?.classList.toggle("text-on-surface", isActive);
+      paragraph?.classList.toggle("text-on-surface-variant", !isActive);
+    });
+
+    if (activeTitle) {
+      const heading = items[index]?.querySelector<HTMLElement>("h4");
+      activeTitle.textContent = heading?.textContent?.trim() ?? "";
+    }
+  }
+
+  items.forEach((item) => {
+    item.addEventListener("mouseenter", () => {
+      const index = parseInt(item.dataset["gastroItem"] ?? "0", 10);
+      activate(index);
+    });
+  });
+</script>
