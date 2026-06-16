@@ -2,6 +2,7 @@
 import { fetchVillages } from "../lib/sanity/queries/villages";
 import { posterImage } from "../lib/sanity/image";
 import type { Locale } from "../lib/i18n/config";
+import { t } from "../lib/i18n/ui";
 
 interface Props {
   lang: Locale;
@@ -125,7 +126,7 @@ const foodItems: FoodItem[] = (villages as VillageRaw[])
     <div class="absolute bottom-stack-lg left-stack-lg pointer-events-none">
       <span
         class="text-white/80 font-label-sm text-label-sm uppercase tracking-widest mb-2 block"
-        >Gastronomy</span
+        >{t(lang, "villages.gastronomy")}</span
       >
       <h3
         id="gastro-active-title"
