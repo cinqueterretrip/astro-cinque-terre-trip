@@ -1,22 +1,80 @@
+---
+import { DEFAULT_LOCALE, type Locale } from "../lib/i18n/config";
+
+interface Props {
+  currentLocale?: Locale;
+}
+
+type MenuItem = {
+  href: Record<Locale, string>;
+  labels: Record<Locale, string>;
+};
+
+const menuItems: MenuItem[] = [
+  {
+    href: {
+      it: "/borghi",
+      en: "/en/villages",
+    },
+    labels: {
+      it: "Borghi",
+      en: "Villages",
+    },
+  },
+  {
+    href: {
+      it: "/#experiences",
+      en: "/en/#experiences",
+    },
+    labels: {
+      it: "Esperienze",
+      en: "Experiences",
+    },
+  },
+  {
+    href: {
+      it: "/#hiking",
+      en: "/en/#hiking",
+    },
+    labels: {
+      it: "Trekking",
+      en: "Hiking",
+    },
+  },
+  {
+    href: {
+      it: "/#beaches",
+      en: "/en/#beaches",
+    },
+    labels: {
+      it: "Spiagge",
+      en: "Beaches",
+    },
+  },
+  {
+    href: {
+      it: "/#tips",
+      en: "/en/#tips",
+    },
+    labels: {
+      it: "Consigli",
+      en: "Tips",
+    },
+  },
+];
+
+const { currentLocale = DEFAULT_LOCALE } = Astro.props as Props;
+---
+
 <nav class="hidden md:flex items-center gap-stack-lg">
-  <a
-    class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors duration-300"
-    href="#">Villages</a
-  >
-  <a
-    class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors duration-300"
-    href="#">Experiences</a
-  >
-  <a
-    class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors duration-300"
-    href="#">Hiking</a
-  >
-  <a
-    class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors duration-300"
-    href="#">Beaches</a
-  >
-  <a
-    class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors duration-300"
-    href="#">Tips</a
-  >
+  {
+    menuItems.map((item) => (
+      <a
+        class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors duration-300"
+        href={item.href[currentLocale]}
+      >
+        {item.labels[currentLocale]}
+      </a>
+    ))
+  }
 </nav>

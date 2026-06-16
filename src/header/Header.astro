@@ -2,6 +2,8 @@
 import Navbar from "./Navbar.astro";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
 import type { Locale } from "../lib/i18n/config";
+
+const currentLocale = (Astro.currentLocale ?? "it") as Locale;
 ---
 
 <header
@@ -14,11 +16,11 @@ import type { Locale } from "../lib/i18n/config";
     <div class="font-headline text-headline-h3 text-secondary">
       Cinque Terre Trip
     </div>
-    <Navbar />
+    <Navbar currentLocale={currentLocale} />
     <div class="flex items-center gap-stack-md">
       <LanguageSwitcher
         currentPath={Astro.url.pathname}
-        currentLocale={(Astro.currentLocale ?? "it") as Locale}
+        currentLocale={currentLocale}
       />
       <!-- <button
         class="bg-primary text-white px-stack-lg py-2 rounded-DEFAULT font-label-sm text-label-sm hover:opacity-90 active:scale-95 transition-all"
