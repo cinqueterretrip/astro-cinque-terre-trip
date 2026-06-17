@@ -2,7 +2,7 @@
 import { PortableText } from "astro-portabletext";
 import type { Locale } from "../lib/i18n/config";
 import { t, type UIKey } from "../lib/i18n/ui";
-import { Info } from "../icons";
+import { Info, Share, ThumbUp } from "../icons";
 import "../styles/content.css";
 
 interface Hiking {
@@ -42,11 +42,11 @@ const hasLocalTips = Boolean(hiking.localTips?.trim());
     <div
       class="sticky top-28 flex flex-col gap-stack-lg items-center text-outline"
     >
-      <button class="hover:text-primary transition-colors"
-        ><span class="material-symbols-outlined">share</span></button
+      <button class="hover:text-primary transition-colors cursor-pointer"
+        ><Share /></button
       >
-      <button class="hover:text-primary transition-colors"
-        ><span class="material-symbols-outlined">thumb_up</span></button
+      <button class="hover:text-primary transition-colors cursor-pointer"
+        ><ThumbUp /></button
       >
     </div>
   </aside>

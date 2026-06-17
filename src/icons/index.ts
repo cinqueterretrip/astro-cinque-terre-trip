@@ -11,4 +11,6 @@ export { default as LocationOn } from "./LocationOn.astro";
 export { default as PartlyCloudyDay } from "./PartlyCloudyDay.astro";
 export { default as Rainy } from "./Rainy.astro";
 export { default as Schedule } from "./Schedule.astro";
+export { default as Share } from "./Share.astro";
+export { default as ThumbUp } from "./ThumbUp.astro";
 export { default as Train } from "./Train.astro";
