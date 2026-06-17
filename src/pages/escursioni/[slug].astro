@@ -71,7 +71,11 @@ export async function getStaticPaths() {
   description={hiking.seo?.description}
   locale={lang}
 >
-  <ArticleHero title={hiking.title} backgroundImage={heroBackgroundImage} />
+  <ArticleHero
+    lang={lang}
+    title={hiking.title}
+    backgroundImage={heroBackgroundImage}
+  />
   <main id="main-content">
     <Hikings hiking={hiking} lang={lang} />
   </main>

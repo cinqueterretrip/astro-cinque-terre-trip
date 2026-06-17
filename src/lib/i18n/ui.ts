@@ -15,6 +15,7 @@ const ui = {
     "villages.bus": "Bus",
     "villages.train-station": "Treno",
     "villages.boat": "Barca",
+    "article.read": "di lettura",
     "footer.tagline":
       "La tua guida definitiva per esplorare i cinque villaggi della Riviera Italiana.",
   },
@@ -32,6 +33,7 @@ const ui = {
     "villages.boat": "Boat",
     "villages.bus": "Bus",
     "villages.car": "Car",
+    "article.read": "read",
     "footer.tagline":
       "Your ultimate guide to exploring the five villages of the Italian Riviera.",
   },
