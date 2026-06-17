@@ -1,0 +1,78 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ArticleHero from "../../layouts/ArticleHero.astro";
+import Hikings from "../../models/Hikings.astro";
+import type { Locale } from "../../lib/i18n/config";
+import { fetchHikings } from "../../lib/sanity/queries/hikings";
+
+type Image = {
+  alt?: string;
+  asset: {
+    _id: string;
+    url: string;
+    metadata: {
+      dimensions: { width: number; height: number };
+      lqip?: string;
+    };
+  };
+};
+
+interface Hiking {
+  _id: string;
+  language?: Locale;
+  title: string;
+  articleType?: string;
+  slug: string;
+  tagline?: string;
+  localTips?: string;
+  text?: [];
+  asideHint?: {
+    title?: string;
+    text?: string;
+  };
+  heroImage: Image;
+  seo: {
+    title: string;
+    description: string;
+  };
+}
+
+interface Props {
+  lang: Locale;
+  hiking: Hiking;
+}
+
+const { hiking, lang } = Astro.props as Props;
+const heroBackgroundImage = {
+  ...hiking.heroImage,
+  alt: hiking.heroImage.alt ?? hiking.title,
+  asset: {
+    ...hiking.heroImage.asset,
+    metadata: {
+      ...hiking.heroImage.asset.metadata,
+      lqip: hiking.heroImage.asset.metadata.lqip ?? "",
+    },
+  },
+};
+
+export async function getStaticPaths() {
+  const lang: Locale = "it";
+  const hikings: Hiking[] = await fetchHikings(lang);
+
+  return hikings.map((hiking) => ({
+    params: { slug: hiking.slug },
+    props: { lang, hiking },
+  }));
+}
+---
+
+<BaseLayout
+  title={hiking.seo?.title}
+  description={hiking.seo?.description}
+  locale={lang}
+>
+  <ArticleHero title={hiking.title} backgroundImage={heroBackgroundImage} />
+  <main id="main-content">
+    <Hikings hiking={hiking} lang={lang} />
+  </main>
+</BaseLayout>

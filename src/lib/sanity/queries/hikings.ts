@@ -1,0 +1,57 @@
+import { sanityClient } from "sanity:client";
+import type { Locale } from "../../i18n/config";
+
+export async function fetchHikingCards(lang: Locale) {
+  return sanityClient.fetch(
+    `*[_type == "hiking" && language == $lang] | order(coalesce(order, 9999) asc, _createdAt asc) {
+      _id,
+      title,
+      tagline,
+      "slug": slug.current,
+      heroImage {
+        alt,
+        asset-> {
+          _id,
+          url,
+          metadata {
+            dimensions { width, height },
+            lqip
+          }
+        }
+      }
+    }`,
+    { lang },
+  );
+}
+
+// L'ordinamento e' stabile: prima per `order`, poi per `_createdAt`.
+export async function fetchHikings(lang: Locale) {
+  return sanityClient.fetch(
+    `*[_type == "hiking" && language == $lang] | order(coalesce(order, 9999) asc, _createdAt asc) {
+      _id,
+      language,
+      title,
+      articleType,
+      "slug": slug.current,
+      text,
+      localTips,
+      asideHint {
+        title,
+        text
+      },
+      heroImage {
+        alt,
+        asset-> {
+          _id,
+          url,
+          metadata {
+            dimensions { width, height },
+            lqip
+          }
+        }
+      },
+      seo
+    }`,
+    { lang },
+  );
+}

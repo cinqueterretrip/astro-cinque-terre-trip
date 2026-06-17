@@ -108,13 +108,3 @@
   --text-label-sm--letter-spacing: 0.05em;
   --text-label-sm--font-weight: 600;
 }
-
-.main-text {
-  h3 {
-    @apply text-headline-h3 font-headline text-secondary my-8;
-  }
-
-  h4 {
-    @apply text-headline-h4 text-on-surface;
-  }
-}

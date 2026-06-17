@@ -1,0 +1,63 @@
+---
+import { heroImage } from "../lib/sanity/image";
+
+interface Props {
+  title: string;
+  articleType?: string;
+  backgroundImage: {
+    alt: string;
+    asset: {
+      _id: string;
+      url: string;
+      metadata: {
+        dimensions: { width: number; height: number };
+        lqip: string;
+      };
+    };
+  };
+}
+
+const { title, articleType, backgroundImage } = Astro.props;
+const image = heroImage(backgroundImage);
+---
+
+<section
+  class="relative w-full h-153.5 flex items-end pb-stack-xl overflow-hidden"
+>
+  <img
+    class="absolute inset-0 w-full h-full object-cover"
+    src={image.src}
+    srcset={image.srcSet}
+    sizes={image.sizes}
+    alt={backgroundImage.alt}
+    loading="eager"
+    fetchpriority="high"
+  />
+  <div class="absolute inset-0 hero-gradient"></div>
+  <div
+    class="relative w-full px-gutter max-w-container-max mx-auto z-10 text-white"
+  >
+    <div
+      class="inline-block bg-secondary text-on-secondary px-stack-md py-1 rounded-full font-label-sm text-label-sm mb-stack-md uppercase tracking-wider"
+    >
+      {articleType}
+    </div>
+    <h1 class="font-headline text-headline-h1 max-w-3xl mb-stack-md">
+      {title}
+    </h1>
+    <div
+      class="flex items-center gap-stack-lg font-label-sm text-label-sm uppercase tracking-widest opacity-90"
+    >
+      <div class="flex items-center gap-stack-xs">
+        <span class="material-symbols-outlined text-[18px]">schedule</span>
+        <span>6 min di lettura</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-gradient {
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));
+  }
+</style>
