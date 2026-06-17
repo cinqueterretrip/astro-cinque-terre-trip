@@ -4,6 +4,7 @@ import ArticleHero from "../../layouts/ArticleHero.astro";
 import Hikings from "../../models/Hikings.astro";
 import type { Locale } from "../../lib/i18n/config";
 import { fetchHikings } from "../../lib/sanity/queries/hikings";
+import readingTime from "reading-time";
 
 type Image = {
   alt?: string;
@@ -43,6 +44,17 @@ interface Props {
 }
 
 const { hiking, lang } = Astro.props as Props;
+
+type PortableTextChild = { text?: string };
+type PortableTextBlock = { _type: string; children?: PortableTextChild[] };
+
+const plainText = ((hiking.text ?? []) as PortableTextBlock[])
+  .filter((b) => b._type === "block")
+  .flatMap((b) => b.children ?? [])
+  .map((c) => c.text ?? "")
+  .join(" ");
+const articleReadingTime = Math.ceil(readingTime(plainText).minutes) || 1;
+
 const heroBackgroundImage = {
   ...hiking.heroImage,
   alt: hiking.heroImage.alt ?? hiking.title,
@@ -74,6 +86,7 @@ export async function getStaticPaths() {
   <ArticleHero
     lang={lang}
     title={hiking.title}
+    readingTime={articleReadingTime}
     backgroundImage={heroBackgroundImage}
   />
   <main id="main-content">

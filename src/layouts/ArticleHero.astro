@@ -8,6 +8,7 @@ interface Props {
   lang: Locale;
   title: string;
   articleType?: string;
+  readingTime?: number;
   backgroundImage: {
     alt: string;
     asset: {
@@ -21,7 +22,7 @@ interface Props {
   };
 }
 
-const { lang, title, articleType, backgroundImage } = Astro.props;
+const { lang, title, articleType, readingTime, backgroundImage } = Astro.props;
 const image = heroImage(backgroundImage);
 ---
 
@@ -54,7 +55,7 @@ const image = heroImage(backgroundImage);
     >
       <div class="flex items-center gap-stack-xs">
         <Schedule dimension="18px" />
-        <span>6 min {t(lang, "article.read")}</span>
+        <span>{readingTime ?? 1} min {t(lang, "article.read")}</span>
       </div>
     </div>
   </div>
