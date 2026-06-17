@@ -1,11 +1,29 @@
 @reference "./global.css";
 
 .main-text {
+  h2 {
+    @apply text-headline-h2 font-headline text-secondary mt-stack-xl mb-stack-md;
+  }
+
   h3 {
-    @apply text-headline-h3 font-headline text-secondary my-8;
+    @apply text-headline-h3 font-headline text-secondary mt-stack-xl mb-stack-md;
   }
 
   h4 {
-    @apply text-headline-h4 text-on-surface;
+    @apply text-headline-h4 font-headline text-on-surface;
+  }
+
+  blockquote {
+    @apply border-l-4 border-primary px-stack-lg py-stack-sm my-stack-xl bg-surface-container-low italic text-secondary font-headline text-xl font-semibold;
+  }
+
+  p:first-child::first-letter {
+    float: left;
+    font-family: "Playfair Display", serif;
+    font-size: 5rem;
+    line-height: 4rem;
+    padding-right: 0.75rem;
+    color: #97422d;
+    font-weight: 700;
   }
 }

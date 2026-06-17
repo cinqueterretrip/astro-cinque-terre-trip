@@ -1,3 +1,39 @@
+---
+import { PortableText } from "astro-portabletext";
+import type { Locale } from "../lib/i18n/config";
+import { t, type UIKey } from "../lib/i18n/ui";
+import { Info } from "../icons";
+import "../styles/content.css";
+
+interface Hiking {
+  _id: string;
+  language?: Locale;
+  title: string;
+  articleType?: string;
+  slug: string;
+  tagline?: string;
+  localTips?: string;
+  text?: [];
+  asideHint?: {
+    title?: string;
+    text?: string;
+  };
+  seo: {
+    title: string;
+    description: string;
+  };
+}
+
+interface Props {
+  lang: Locale;
+  hiking: Hiking;
+}
+
+const { hiking, lang } = Astro.props as Props;
+const hikingTextBlocks = Array.isArray(hiking.text) ? hiking.text : [];
+const hasLocalTips = Boolean(hiking.localTips?.trim());
+---
+
 <div
   class="w-full px-gutter max-w-container-max mx-auto py-stack-xl flex gap-stack-xl relative"
 >
@@ -10,126 +46,29 @@
         ><span class="material-symbols-outlined">share</span></button
       >
       <button class="hover:text-primary transition-colors"
-        ><span class="material-symbols-outlined">bookmark</span></button
-      >
-      <button class="hover:text-primary transition-colors"
         ><span class="material-symbols-outlined">thumb_up</span></button
       >
     </div>
   </aside>
   <!-- Main Content Area -->
-  <article class="w-full lg:w-[65%] editorial-content">
-    <p class="font-body-lg text-body-lg text-on-surface-variant drop-cap">
-      Non lasciate che qualche nuvola rovini il vostro sogno ligure. Anche se le
-      Cinque Terre sono celebri per i sentieri assolati e i bagni nel mare
-      turchese, la pioggia trasforma questi borghi in luoghi di una malinconia
-      poetica e bellezza intima. È il momento perfetto per rallentare e scoprire
-      il lato più autentico del territorio.
-    </p>
-    <h2
-      class="font-headline-h2 text-headline-h2 text-secondary mt-stack-xl mb-stack-md"
-      id="borghi"
-    >
-      Scoprire i borghi sotto una nuova luce
-    </h2>
-    <p class="font-body-md text-body-md text-on-surface-variant">
-      Passeggiare per i caruggi (vicoli stretti) di Vernazza o Manarola mentre
-      piove regala un'atmosfera magica. I colori pastello delle case diventano
-      più intensi e il profumo di salsedine si mescola a quello dei forni locali
-      che sfornano focaccia calda. È il momento ideale per scatti fotografici
-      unici, senza la folla tipica delle giornate di sole.
-    </p>
-    <blockquote
-      class="border-l-4 border-primary pl-stack-lg py-stack-sm my-stack-xl bg-surface-container-low italic text-secondary font-headline-h3 text-headline-h3"
-    >
-      "La pioggia alle Cinque Terre non è un ostacolo, ma un invito a scoprire
-      l'anima calda e accogliente racchiusa tra i suoi muri di pietra."
-    </blockquote>
-    <h2
-      class="font-headline-h2 text-headline-h2 text-secondary mt-stack-xl mb-stack-md"
-      id="chiese"
-    >
-      Chiese e luoghi storici
-    </h2>
-    <p class="font-body-md text-body-md text-on-surface-variant">
-      Le chiese dei borghi sono veri e propri tesori d'arte e storia. La Chiesa
-      di Santa Margherita d'Antiochia a Vernazza, affacciata direttamente sul
-      mare, offre un rifugio silenzioso dove ascoltare il fragore delle onde. A
-      Monterosso, il Convento dei Cappuccini custodisce opere preziose e offre
-      una vista mozzafiato sulla baia, avvolta dalla nebbia marina.
-    </p>
-    <div
-      class="w-full h-96 rounded-xl my-stack-xl shadow-sm overflow-hidden bg-surface-container"
-    >
-      <img
-        alt="Antica chiesa ligure"
-        class="w-full h-full object-cover"
-        src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2vnpWU-6bChN1oIjeIO-Qfg_EquFB2ivj5Bdavw-DIjxVMNCZ0JghBJ4L8TayK8J2viONCd-3iCxHNQE1CKTb15rc4OO8ucZ2UXm8CXtWwsTiX4Bf1UBSTcHqteWQ7BeXnQ-Oy6EywJ_7IKx-Sn7PyhmRWHasaGbBNM0npRiDRocPBREaNuCsIWKu3uLo8_gehMVv2O8h4LqdPl_nFLuUk4pPw5hgmDEuQ8GgbCzIYi2Rs3c7GV-ojiK99yB7L3Pxk1UW3oj8Xczf"
-      />
-    </div>
-    <h2
-      class="font-headline-h2 text-headline-h2 text-secondary mt-stack-xl mb-stack-md"
-      id="gastronomia"
-    >
-      Un'esperienza gastronomica senza fretta
-    </h2>
-    <p class="font-body-md text-body-md text-on-surface-variant">
-      Quale miglior momento per una lunga sosta culinaria? Entrate in una delle
-      tipiche trattorie e lasciatevi viziare. Dalle trofie al pesto preparate al
-      mortaio, alle acciughe di Monterosso, fino alla farinata calda. Il
-      maltempo è la scusa perfetta per un pranzo che dura ore, coccolati
-      dall'ospitalità ligure.
-    </p>
-    <h2
-      class="font-headline-h2 text-headline-h2 text-secondary mt-stack-xl mb-stack-md"
-      id="vino"
-    >
-      Degustazioni di vino nelle cantine
-    </h2>
-    <p class="font-body-md text-body-md text-on-surface-variant">
-      I famosi terrazzamenti delle Cinque Terre producono vini straordinari.
-      Molte cantine locali offrono degustazioni al coperto, dove potrete
-      assaggiare il Cinque Terre DOC e il rarissimo Sciacchetrà, ascoltando i
-      racconti dei viticoltori eroici che sfidano la pendenza per coltivare la
-      vite.
-    </p>
-    <div
-      class="p-stack-lg bg-surface-container rounded-xl border border-outline-variant my-stack-xl"
-    >
-      <div class="flex items-center gap-stack-md mb-stack-sm">
-        <span class="material-symbols-outlined text-primary">restaurant</span>
-        <span class="font-bold text-secondary">Consiglio dell'Esperto</span>
-      </div>
-      <p class="text-body-md text-on-surface-variant">
-        Cercate le piccole enoteche nei sotterranei di Riomaggiore. L'ambiente
-        in pietra e l'illuminazione soffusa creano un'atmosfera incredibilmente
-        accogliente mentre fuori piove.
-      </p>
-    </div>
-    <h2
-      class="font-headline-h2 text-headline-h2 text-secondary mt-stack-xl mb-stack-md"
-      id="laspezia"
-    >
-      Visitare La Spezia e i suoi musei
-    </h2>
-    <p class="font-body-md text-body-md text-on-surface-variant">
-      A pochi minuti di treno, La Spezia offre ottime alternative per le
-      giornate piovose. Il Museo Tecnico Navale è uno dei più importanti al
-      mondo nel suo genere, oppure potete visitare il Museo Amedeo Lia, definito
-      "un piccolo Louvre" per la qualità della sua collezione d'arte antica.
-    </p>
-    <h2
-      class="font-headline-h2 text-headline-h2 text-secondary mt-stack-xl mb-stack-md"
-      id="shopping"
-    >
-      Shopping locale e artigianato
-    </h2>
-    <p class="font-body-md text-body-md text-on-surface-variant">
-      Esplorate le botteghe artigiane per acquistare ceramiche dipinte a mano,
-      tessuti in lino o prodotti tipici come l'olio extravergine d'oliva della
-      Riviera Ligure e il miele locale. È il modo migliore per sostenere
-      l'economia del territorio portando a casa un pezzetto di Liguria.
-    </p>
+  <article
+    class="w-full lg:w-[65%] space-y-stack-md text-on-surface-variant font-body-lg leading-relaxed main-text drop-cap"
+  >
+    <PortableText value={hikingTextBlocks} />
+    <!-- Local Tip -->
+    {
+      hasLocalTips && (
+        <div class="p-stack-lg bg-surface-container rounded-xl border border-outline-variant my-stack-xl">
+          <div class="flex items-center gap-stack-md mb-stack-sm">
+            <span class="material-symbols-outlined text-primary">
+              <Info />
+            </span>
+            <span class="font-bold text-secondary">Consiglio dell'Esperto</span>
+          </div>
+          <p class="text-body-md text-on-surface-variant">{hiking.localTips}</p>
+        </div>
+      )
+    }
   </article>
   <!-- Sticky Aside -->
   <aside class="hidden lg:block w-[35%]">
