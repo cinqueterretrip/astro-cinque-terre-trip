@@ -16,6 +16,10 @@ const ui = {
     "villages.train-station": "Treno",
     "villages.boat": "Barca",
     "article.read": "di lettura",
+    "share.buttonLabel": "Condividi articolo",
+    "share.articleText": "Leggi questo articolo",
+    "share.copied": "Link copiato negli appunti",
+    "share.copyError": "Impossibile copiare il link",
     "footer.tagline":
       "La tua guida definitiva per esplorare i cinque villaggi della Riviera Italiana.",
   },
@@ -34,6 +38,10 @@ const ui = {
     "villages.bus": "Bus",
     "villages.car": "Car",
     "article.read": "read",
+    "share.buttonLabel": "Share article",
+    "share.articleText": "Read this article",
+    "share.copied": "Link copied to clipboard",
+    "share.copyError": "Unable to copy link",
     "footer.tagline":
       "Your ultimate guide to exploring the five villages of the Italian Riviera.",
   },

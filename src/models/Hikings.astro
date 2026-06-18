@@ -1,7 +1,7 @@
 ---
 import { PortableText } from "astro-portabletext";
 import type { Locale } from "../lib/i18n/config";
-import { t, type UIKey } from "../lib/i18n/ui";
+import { t } from "../lib/i18n/ui";
 import { Info, Share, ThumbUp } from "../icons";
 import "../styles/content.css";
 
@@ -32,6 +32,11 @@ interface Props {
 const { hiking, lang } = Astro.props as Props;
 const hikingTextBlocks = Array.isArray(hiking.text) ? hiking.text : [];
 const hasLocalTips = Boolean(hiking.localTips?.trim());
+
+const shareLabel = t(lang, "share.buttonLabel");
+const shareArticleText = t(lang, "share.articleText");
+const shareCopied = t(lang, "share.copied");
+const shareCopyError = t(lang, "share.copyError");
 ---
 
 <div
@@ -42,12 +47,18 @@ const hasLocalTips = Boolean(hiking.localTips?.trim());
     <div
       class="sticky top-28 flex flex-col gap-stack-lg items-center text-outline"
     >
-      <button class="hover:text-primary transition-colors cursor-pointer"
-        ><Share /></button
+      <button
+        id="share-article-button"
+        class="hover:text-primary transition-colors cursor-pointer"
+        aria-label={shareLabel}
+        title={shareLabel}
+        data-share-text={shareArticleText}
       >
-      <button class="hover:text-primary transition-colors cursor-pointer"
-        ><ThumbUp /></button
-      >
+        <Share />
+      </button>
+      <button class="hover:text-primary transition-colors cursor-pointer">
+        <ThumbUp />
+      </button>
     </div>
   </aside>
   <!-- Main Content Area -->
@@ -221,3 +232,19 @@ const hasLocalTips = Boolean(hiking.localTips?.trim());
     </div>
   </div>
 </section>
+
+<div
+  id="share-toast"
+  class="fixed bottom-6 left-1/2 -translate-x-1/2 rounded-full bg-primary px-4 py-2 text-sm text-surface shadow-lg opacity-0 pointer-events-none transition-opacity duration-200"
+  role="status"
+  aria-live="polite"
+  data-copied-text={shareCopied}
+  data-copy-error-text={shareCopyError}
+>
+</div>
+
+<script>
+  import { setupArticleShare } from "../lib/article-share";
+
+  setupArticleShare("#share-article-button", "#share-toast");
+</script>
