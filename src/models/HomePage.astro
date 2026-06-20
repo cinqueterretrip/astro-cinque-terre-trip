@@ -16,7 +16,7 @@ interface Props {
   lang: Locale;
 }
 
-const { lang } = Astro.props;
+const { lang } = Astro.props as Props;
 const [page] = await Promise.all([fetchHomePage(lang)]);
 ---
 
@@ -50,7 +50,7 @@ const [page] = await Promise.all([fetchHomePage(lang)]);
     <Weather />
     <!-- <ExperiencesList /> -->
     <GastronomyList lang={lang} />
-    <HikingList />
+    <HikingList lang={lang} />
     <TipsList />
     <Channel />
     <!-- <MapPreview /> -->

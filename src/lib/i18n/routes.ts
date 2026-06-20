@@ -5,6 +5,10 @@ export const ROUTE_MAP: Record<string, Record<Locale, string>> = {
     it: "borghi",
     en: "villages",
   },
+  hiking: {
+    it: "escursioni",
+    en: "hiking",
+  },
   // domani aggiungi una sezione:
   // experiences: { it: "esperienze", en: "experiences" },
 };
