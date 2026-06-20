@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ArticleHero from "../../layouts/ArticleHero.astro";
-import Hikings from "../../models/Hikings.astro";
+import Articles from "../../models/Articles.astro";
 import type { Locale } from "../../lib/i18n/config";
 import { fetchHikings } from "../../lib/sanity/queries/hikings";
 import readingTime from "reading-time";
@@ -91,6 +91,6 @@ export async function getStaticPaths() {
     backgroundImage={heroBackgroundImage}
   />
   <main id="main-content">
-    <Hikings hiking={hiking} lang={lang} />
+    <Articles article={hiking} lang={lang} />
   </main>
 </BaseLayout>

@@ -6,7 +6,7 @@ import { extractPortableTextToc } from "../lib/portabletext/toc";
 import { Info, Share, ThumbUp } from "../icons";
 import "../styles/content.css";
 
-interface Hiking {
+interface Article {
   _id: string;
   language?: Locale;
   title: string;
@@ -27,13 +27,13 @@ interface Hiking {
 
 interface Props {
   lang: Locale;
-  hiking: Hiking;
+  article: Article;
 }
 
-const { hiking, lang } = Astro.props as Props;
-const hikingTextBlocks = Array.isArray(hiking.text) ? hiking.text : [];
-const hasLocalTips = Boolean(hiking.localTips?.trim());
-const tocHeadings = extractPortableTextToc(hikingTextBlocks, {
+const { article, lang } = Astro.props as Props;
+const articleTextBlocks = Array.isArray(article.text) ? article.text : [];
+const hasLocalTips = Boolean(article.localTips?.trim());
+const tocHeadings = extractPortableTextToc(articleTextBlocks, {
   styles: ["h2", "h3"],
 });
 const tocIds = tocHeadings.map((heading) => heading.id);
@@ -73,7 +73,7 @@ const shareCopyError = t(lang, "share.copyError");
     data-article-content
     data-toc-ids={tocIdsSerialized}
   >
-    <PortableText value={hikingTextBlocks} />
+    <PortableText value={articleTextBlocks} />
     <!-- Local Tip -->
     {
       hasLocalTips && (
@@ -86,7 +86,9 @@ const shareCopyError = t(lang, "share.copyError");
               {t(lang, "article.localTip")}
             </span>
           </div>
-          <p class="text-body-md text-on-surface-variant">{hiking.localTips}</p>
+          <p class="text-body-md text-on-surface-variant">
+            {article.localTips}
+          </p>
         </div>
       )
     }
@@ -119,12 +121,12 @@ const shareCopyError = t(lang, "share.copyError");
       }
       <!-- Info Box -->
       {
-        hiking.asideHint?.title && hiking.asideHint?.text && (
+        article.asideHint?.title && article.asideHint?.text && (
           <div class="bg-primary-container text-on-primary-container p-stack-lg rounded-xl shadow-sm">
             <div class="flex items-center gap-stack-md mb-stack-sm">
-              <h4 class="font-bold">{hiking.asideHint?.title}</h4>
+              <h4 class="font-bold">{article.asideHint?.title}</h4>
             </div>
-            <p class="text-sm opacity-90">{hiking.asideHint?.text}</p>
+            <p class="text-sm opacity-90">{article.asideHint?.text}</p>
           </div>
         )
       }
