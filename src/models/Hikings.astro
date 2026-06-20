@@ -74,7 +74,9 @@ const shareCopyError = t(lang, "share.copyError");
             <span class="material-symbols-outlined text-primary">
               <Info />
             </span>
-            <span class="font-bold text-secondary">Consiglio dell'Esperto</span>
+            <span class="font-bold text-secondary">
+              {t(lang, "article.localTip")}
+            </span>
           </div>
           <p class="text-body-md text-on-surface-variant">{hiking.localTips}</p>
         </div>
@@ -91,7 +93,7 @@ const shareCopyError = t(lang, "share.copyError");
         <h4
           class="font-label-sm text-label-sm uppercase tracking-widest text-outline mb-stack-md"
         >
-          In questo articolo
+          {t(lang, "article.inThisArticle")}
         </h4>
         <nav class="flex flex-col gap-stack-sm font-body-md">
           <a
@@ -133,30 +135,26 @@ const shareCopyError = t(lang, "share.copyError");
         </nav>
       </div>
       <!-- Info Box -->
-      <div
-        class="bg-primary-container text-on-primary-container p-stack-lg rounded-xl shadow-sm"
-      >
-        <div class="flex items-center gap-stack-md mb-stack-sm">
-          <span class="material-symbols-outlined">train</span>
-          <h4 class="font-bold">Il treno è il tuo alleato</h4>
-        </div>
-        <p class="text-sm opacity-90">
-          In caso di forte pioggia, i sentieri vengono chiusi per sicurezza. La
-          ferrovia rimane il modo più affidabile e suggestivo per spostarsi tra
-          i borghi protetti dalle intemperie.
-        </p>
-      </div>
+      {
+        hiking.asideHint?.title && hiking.asideHint?.text && (
+          <div class="bg-primary-container text-on-primary-container p-stack-lg rounded-xl shadow-sm">
+            <div class="flex items-center gap-stack-md mb-stack-sm">
+              <h4 class="font-bold">{hiking.asideHint?.title}</h4>
+            </div>
+            <p class="text-sm opacity-90">{hiking.asideHint?.text}</p>
+          </div>
+        )
+      }
     </div>
   </aside>
 </div>
 <!-- Related Articles -->
-<section class="bg-surface-container py-stack-xl">
+<!-- <section class="bg-surface-container py-stack-xl">
   <div class="w-full px-gutter max-w-container-max mx-auto">
     <h2 class="font-headline-h2 text-headline-h2 text-secondary mb-stack-xl">
       Ti potrebbe interessare anche
     </h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-stack-lg">
-      <!-- Article Card 1 -->
       <div
         class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
       >
@@ -180,7 +178,6 @@ const shareCopyError = t(lang, "share.copyError");
           </p>
         </div>
       </div>
-      <!-- Article Card 2 -->
       <div
         class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
       >
@@ -205,7 +202,6 @@ const shareCopyError = t(lang, "share.copyError");
           </p>
         </div>
       </div>
-      <!-- Article Card 3 -->
       <div
         class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
       >
@@ -231,7 +227,7 @@ const shareCopyError = t(lang, "share.copyError");
       </div>
     </div>
   </div>
-</section>
+</section> -->
 
 <div
   id="share-toast"
