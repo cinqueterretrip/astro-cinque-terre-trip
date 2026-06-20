@@ -2,6 +2,7 @@
 import { PortableText } from "astro-portabletext";
 import type { Locale } from "../lib/i18n/config";
 import { t } from "../lib/i18n/ui";
+import { extractPortableTextToc } from "../lib/portabletext/toc";
 import { Info, Share, ThumbUp } from "../icons";
 import "../styles/content.css";
 
@@ -32,6 +33,11 @@ interface Props {
 const { hiking, lang } = Astro.props as Props;
 const hikingTextBlocks = Array.isArray(hiking.text) ? hiking.text : [];
 const hasLocalTips = Boolean(hiking.localTips?.trim());
+const tocHeadings = extractPortableTextToc(hikingTextBlocks, {
+  styles: ["h2", "h3"],
+});
+const tocIds = tocHeadings.map((heading) => heading.id);
+const tocIdsSerialized = JSON.stringify(tocIds);
 
 const shareLabel = t(lang, "share.buttonLabel");
 const shareArticleText = t(lang, "share.articleText");
@@ -64,6 +70,8 @@ const shareCopyError = t(lang, "share.copyError");
   <!-- Main Content Area -->
   <article
     class="w-full lg:w-[65%] space-y-stack-md text-on-surface-variant font-body-lg leading-relaxed main-text drop-cap"
+    data-article-content
+    data-toc-ids={tocIdsSerialized}
   >
     <PortableText value={hikingTextBlocks} />
     <!-- Local Tip -->
@@ -87,53 +95,28 @@ const shareCopyError = t(lang, "share.copyError");
   <aside class="hidden lg:block w-[35%]">
     <div class="sticky top-28 space-y-stack-xl">
       <!-- Table of Contents -->
-      <div
-        class="bg-white p-stack-lg rounded-xl shadow-sm border border-surface-container-high"
-      >
-        <h4
-          class="font-label-sm text-label-sm uppercase tracking-widest text-outline mb-stack-md"
-        >
-          {t(lang, "article.inThisArticle")}
-        </h4>
-        <nav class="flex flex-col gap-stack-sm font-body-md">
-          <a
-            class="flex items-center gap-stack-sm text-on-surface-variant hover:text-primary transition-colors"
-            href="#borghi"
-          >
-            <span class="text-label-sm opacity-50">01</span> Scoprire i borghi
-          </a>
-          <a
-            class="flex items-center gap-stack-sm text-on-surface-variant hover:text-primary transition-colors"
-            href="#chiese"
-          >
-            <span class="text-label-sm opacity-50">02</span> Chiese e luoghi storici
-          </a>
-          <a
-            class="flex items-center gap-stack-sm text-on-surface-variant hover:text-primary transition-colors"
-            href="#gastronomia"
-          >
-            <span class="text-label-sm opacity-50">03</span> Esperienza gastronomica
-          </a>
-          <a
-            class="flex items-center gap-stack-sm text-on-surface-variant hover:text-primary transition-colors"
-            href="#vino"
-          >
-            <span class="text-label-sm opacity-50">04</span> Degustazioni di vino
-          </a>
-          <a
-            class="flex items-center gap-stack-sm text-on-surface-variant hover:text-primary transition-colors"
-            href="#laspezia"
-          >
-            <span class="text-label-sm opacity-50">05</span> Visitare La Spezia
-          </a>
-          <a
-            class="flex items-center gap-stack-sm text-on-surface-variant hover:text-primary transition-colors"
-            href="#shopping"
-          >
-            <span class="text-label-sm opacity-50">06</span> Shopping locale
-          </a>
-        </nav>
-      </div>
+      {
+        tocHeadings.length > 0 && (
+          <div class="bg-white p-stack-lg rounded-xl shadow-sm border border-surface-container-high">
+            <h4 class="font-label-sm text-label-sm uppercase tracking-widest text-outline mb-stack-md">
+              {t(lang, "article.inThisArticle")}
+            </h4>
+            <nav class="flex flex-col gap-stack-sm font-body-md">
+              {tocHeadings.map((heading, index) => (
+                <a
+                  class="flex items-start gap-stack-sm text-on-surface-variant hover:text-primary transition-colors"
+                  href={`#${heading.id}`}
+                >
+                  <span class="text-label-sm opacity-50 shrink-0 leading-none pt-[5px]">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  {heading.text}
+                </a>
+              ))}
+            </nav>
+          </div>
+        )
+      }
       <!-- Info Box -->
       {
         hiking.asideHint?.title && hiking.asideHint?.text && (
@@ -243,4 +226,29 @@ const shareCopyError = t(lang, "share.copyError");
   import { setupArticleShare } from "../lib/article-share";
 
   setupArticleShare("#share-article-button", "#share-toast");
+
+  const articleElement = document.querySelector("[data-article-content]");
+  if (articleElement instanceof HTMLElement) {
+    const rawTocIds = articleElement.dataset.tocIds ?? "[]";
+
+    try {
+      const parsedTocIds = JSON.parse(rawTocIds);
+      const tocIds = Array.isArray(parsedTocIds)
+        ? parsedTocIds.filter((value) => typeof value === "string")
+        : [];
+      const headingElements = articleElement.querySelectorAll("h2, h3");
+
+      headingElements.forEach((headingElement, index) => {
+        const id = tocIds[index];
+        if (!id || headingElement.id) {
+          return;
+        }
+
+        headingElement.id = id;
+        headingElement.classList.add("scroll-mt-28");
+      });
+    } catch {
+      // Ignore invalid data payloads.
+    }
+  }
 </script>
