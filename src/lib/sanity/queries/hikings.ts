@@ -35,6 +35,7 @@ export async function fetchHikings(lang: Locale) {
       "slug": slug.current,
       text,
       localTips,
+      "likesCount": coalesce(likesCount, 0),
       asideHint {
         title,
         text

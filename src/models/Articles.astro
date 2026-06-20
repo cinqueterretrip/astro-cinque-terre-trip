@@ -14,6 +14,7 @@ interface Article {
   slug: string;
   tagline?: string;
   localTips?: string;
+  likesCount?: number;
   text?: [];
   asideHint?: {
     title?: string;
@@ -43,6 +44,10 @@ const shareLabel = t(lang, "share.buttonLabel");
 const shareArticleText = t(lang, "share.articleText");
 const shareCopied = t(lang, "share.copied");
 const shareCopyError = t(lang, "share.copyError");
+const initialLikesCount =
+  typeof article.likesCount === "number" && article.likesCount > 0
+    ? article.likesCount
+    : 0;
 ---
 
 <div
@@ -62,8 +67,20 @@ const shareCopyError = t(lang, "share.copyError");
       >
         <Share />
       </button>
-      <button class="hover:text-primary transition-colors cursor-pointer">
+      <button
+        id="article-like-button"
+        class="hover:text-primary transition-colors cursor-pointer flex flex-col items-center"
+        aria-pressed="false"
+        aria-label="Like articolo"
+        data-article-id={article._id}
+        data-initial-likes={String(initialLikesCount)}
+      >
         <ThumbUp />
+        <span
+          id="article-like-count"
+          class="text-label-sm leading-none mt-1"
+          data-like-count>{initialLikesCount}</span
+        >
       </button>
     </div>
   </aside>
@@ -226,8 +243,10 @@ const shareCopyError = t(lang, "share.copyError");
 
 <script>
   import { setupArticleShare } from "../lib/article-share";
+  import { setupArticleLikes } from "../lib/article-likes";
 
   setupArticleShare("#share-article-button", "#share-toast");
+  setupArticleLikes("#article-like-button", "#article-like-count");
 
   const articleElement = document.querySelector("[data-article-content]");
   if (articleElement instanceof HTMLElement) {
