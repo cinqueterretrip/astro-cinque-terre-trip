@@ -23,6 +23,10 @@ type TocOptions = {
 
 const DEFAULT_STYLES = ["h2", "h3"];
 
+function normalizeStyle(value: string): string {
+  return value.trim().toLowerCase();
+}
+
 function toAsciiSlug(value: string): string {
   return value
     .normalize("NFD")
@@ -40,8 +44,13 @@ function blockToText(block: PortableTextBlock): string {
   }
 
   return block.children
-    .filter((child) => child?._type === "span")
-    .map((child) => child.text ?? "")
+    .map((child) => {
+      if (!child || typeof child !== "object") {
+        return "";
+      }
+
+      return typeof child.text === "string" ? child.text : "";
+    })
     .join("")
     .trim();
 }
@@ -50,7 +59,7 @@ export function extractPortableTextToc(
   blocks: unknown,
   options: TocOptions = {},
 ): TocHeading[] {
-  const styles = options.styles ?? DEFAULT_STYLES;
+  const styles = (options.styles ?? DEFAULT_STYLES).map(normalizeStyle);
   const safeBlocks = Array.isArray(blocks)
     ? (blocks as PortableTextBlock[])
     : [];
@@ -59,11 +68,10 @@ export function extractPortableTextToc(
   const headings: TocHeading[] = [];
 
   for (const block of safeBlocks) {
-    if (
-      block?._type !== "block" ||
-      !block.style ||
-      !styles.includes(block.style)
-    ) {
+    const style =
+      typeof block?.style === "string" ? normalizeStyle(block.style) : "";
+
+    if (block?._type !== "block" || !style || !styles.includes(style)) {
       continue;
     }
 
@@ -77,7 +85,7 @@ export function extractPortableTextToc(
     idCounts.set(baseId, seenCount + 1);
     const id = seenCount === 0 ? baseId : `${baseId}-${seenCount + 1}`;
 
-    const level = Number.parseInt(block.style.replace("h", ""), 10);
+    const level = Number.parseInt(style.replace("h", ""), 10);
     headings.push({
       key: block._key ?? `${id}-${headings.length + 1}`,
       id,
