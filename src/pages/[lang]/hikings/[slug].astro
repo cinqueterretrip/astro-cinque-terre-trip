@@ -1,0 +1,106 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ArticleHero from "@/layouts/ArticleHero.astro";
+import Articles from "@/models/Articles.astro";
+import type { Locale } from "@/lib/i18n/config";
+import { getLocalePaths } from "@/lib/i18n/paths";
+import { fetchHikings } from "@/lib/sanity/queries/hikings";
+import readingTime from "reading-time";
+
+type Image = {
+  alt?: string;
+  asset: {
+    _id: string;
+    url: string;
+    metadata: {
+      dimensions: { width: number; height: number };
+      lqip?: string;
+    };
+  };
+};
+
+interface Hiking {
+  _id: string;
+  language?: Locale;
+  title: string;
+  articleType?: string;
+  slug: string;
+  tagline?: string;
+  localTips?: string;
+  likesCount?: number;
+  text?: [];
+  asideHint?: {
+    title?: string;
+    text?: string;
+  };
+  heroImage: Image;
+  seo: {
+    title: string;
+    description: string;
+  };
+}
+
+interface Props {
+  lang: Locale;
+  hiking: Hiking;
+}
+
+const { hiking, lang } = Astro.props as Props;
+
+type PortableTextChild = { text?: string };
+type PortableTextBlock = { _type: string; children?: PortableTextChild[] };
+
+const plainText = ((hiking.text ?? []) as PortableTextBlock[])
+  .filter((b) => b._type === "block")
+  .flatMap((b) => b.children ?? [])
+  .map((c) => c.text ?? "")
+  .join(" ");
+const articleReadingTime = Math.ceil(readingTime(plainText).minutes) || 1;
+
+const heroBackgroundImage = {
+  ...hiking.heroImage,
+  alt: hiking.heroImage.alt ?? hiking.title,
+  asset: {
+    ...hiking.heroImage.asset,
+    metadata: {
+      ...hiking.heroImage.asset.metadata,
+      lqip: hiking.heroImage.asset.metadata.lqip ?? "",
+    },
+  },
+};
+
+export async function getStaticPaths() {
+  const localePaths = getLocalePaths() as Array<{ params: { lang: Locale } }>;
+
+  const paths = await Promise.all(
+    localePaths.map(async ({ params }) => {
+      const lang = params.lang;
+      const hikings: Hiking[] = await fetchHikings(lang);
+
+      return hikings.map((hiking) => ({
+        params: { lang, slug: hiking.slug },
+        props: { lang, hiking },
+      }));
+    }),
+  );
+
+  return paths.flat();
+}
+---
+
+<BaseLayout
+  title={hiking.seo?.title}
+  description={hiking.seo?.description}
+  locale={lang}
+>
+  <ArticleHero
+    lang={lang}
+    title={hiking.title}
+    articleType={hiking.articleType}
+    readingTime={articleReadingTime}
+    backgroundImage={heroBackgroundImage}
+  />
+  <main id="main-content">
+    <Articles article={hiking} lang={lang} />
+  </main>
+</BaseLayout>
