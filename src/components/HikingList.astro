@@ -5,6 +5,7 @@ import { ROUTE_MAP } from "../lib/i18n/routes";
 import { cardImage } from "../lib/sanity/image";
 import { fetchHikingCards } from "../lib/sanity/queries/hikings";
 import { ChevronLeft, ChevronRight } from "../icons";
+import { t } from "../lib/i18n/ui";
 
 interface Props {
   lang: Locale;
@@ -46,7 +47,7 @@ function getHikingHref(locale: Locale, slug: string) {
       <div class="max-w-container-max mx-auto px-gutter">
         <div class="flex items-center justify-between gap-4 mb-stack-xl">
           <h2 id="itineraries-heading" class="font-headline text-headline-h1">
-            Perfect Itineraries
+            {t(lang, "home.hikingSectionTitle")}
           </h2>
 
           <div class="flex gap-2">

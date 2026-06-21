@@ -4,6 +4,7 @@ const ui = {
   it: {
     "hero.cta": "Esplora i Villaggi",
     "hero.readBlog": "Leggi il Blog",
+    "home.hikingSectionTitle": "Le migliori escursioni",
     "villages.cta": "Scopri",
     "villages.overview": "Panoramica",
     "villages.quickFacts": "Info rapide",
@@ -28,6 +29,7 @@ const ui = {
   en: {
     "hero.cta": "Explore the Villages",
     "hero.readBlog": "Read the Blog",
+    "home.hikingSectionTitle": "The Best Hikes",
     "villages.cta": "Explore",
     "villages.overview": "Overview",
     "villages.quickFacts": "Quick Facts",
