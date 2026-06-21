@@ -4,9 +4,8 @@
   "exclude": ["dist"],
   "compilerOptions": {
     "types": ["@sanity/astro/module"],
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     }
   }
 }
