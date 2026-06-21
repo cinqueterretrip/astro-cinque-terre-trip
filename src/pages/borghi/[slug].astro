@@ -2,8 +2,14 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import HeroVillages from "@/layouts/HeroVillages.astro";
 import Villages from "@/models/Villages.astro";
+import { buildAlternateLocalePaths } from "@/lib/i18n/alternate-paths";
 import type { Locale } from "@/lib/i18n/config";
 import { fetchVillages } from "@/lib/sanity/queries/villages";
+
+type TranslationEntry = {
+  language?: Locale;
+  slug?: string;
+};
 
 type Image = {
   alt?: string;
@@ -23,6 +29,7 @@ interface Village {
   title: string;
   subtitle?: string;
   slug: string;
+  translations?: TranslationEntry[];
   tagline?: string;
   text?: [];
   quickFacts?: {
@@ -49,6 +56,11 @@ interface Props {
 }
 
 const { village, lang } = Astro.props as Props;
+const alternateLocalePaths = buildAlternateLocalePaths(
+  "villages",
+  village,
+  lang,
+);
 const heroBackgroundImage = {
   ...village.heroImage,
   alt: village.heroImage.alt ?? village.title,
@@ -79,6 +91,7 @@ export async function getStaticPaths() {
     village.subtitle ??
     ""}
   locale={lang}
+  alternateLocalePaths={alternateLocalePaths}
 >
   <HeroVillages
     title={village.title}

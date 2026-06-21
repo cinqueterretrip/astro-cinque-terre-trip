@@ -2,10 +2,16 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import ArticleHero from "@/layouts/ArticleHero.astro";
 import Articles from "@/models/Articles.astro";
+import { buildAlternateLocalePaths } from "@/lib/i18n/alternate-paths";
 import type { Locale } from "@/lib/i18n/config";
 import { getLocalePaths } from "@/lib/i18n/paths";
 import { fetchHikings } from "@/lib/sanity/queries/hikings";
 import readingTime from "reading-time";
+
+type TranslationEntry = {
+  language?: Locale;
+  slug?: string;
+};
 
 type Image = {
   alt?: string;
@@ -25,6 +31,7 @@ interface Hiking {
   title: string;
   articleType?: string;
   slug: string;
+  translations?: TranslationEntry[];
   tagline?: string;
   localTips?: string;
   likesCount?: number;
@@ -46,6 +53,7 @@ interface Props {
 }
 
 const { hiking, lang } = Astro.props as Props;
+const alternateLocalePaths = buildAlternateLocalePaths("hiking", hiking, lang);
 
 type PortableTextChild = { text?: string };
 type PortableTextBlock = { _type: string; children?: PortableTextChild[] };
@@ -92,6 +100,7 @@ export async function getStaticPaths() {
   title={hiking.seo?.title}
   description={hiking.seo?.description}
   locale={lang}
+  alternateLocalePaths={alternateLocalePaths}
 >
   <ArticleHero
     lang={lang}

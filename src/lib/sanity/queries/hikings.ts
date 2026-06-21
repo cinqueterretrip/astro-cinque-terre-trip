@@ -34,6 +34,10 @@ export async function fetchHikings(lang: Locale) {
       title,
       articleType,
       "slug": slug.current,
+      "translations": *[_type == "translation.metadata" && references(^._id)][0].translations[].value->{
+        language,
+        "slug": slug.current
+      },
       text,
       localTips,
       "likesCount": coalesce(likesCount, 0),

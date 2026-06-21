@@ -3,16 +3,18 @@ import "@/styles/global.css";
 import { Font } from "astro:assets";
 import Header from "@/header/Header.astro";
 import Footer from "@/layouts/Footer.astro";
+import type { Locale } from "@/lib/i18n/config";
 
 interface Props {
   title: string;
   description: string;
   ogImage?: string;
-  locale?: "it" | "en";
+  locale?: Locale;
   canonicalUrl?: string;
   noindex?: boolean;
   hreflangIT?: string;
   hreflangEN?: string;
+  alternateLocalePaths?: Partial<Record<Locale, string>>;
 }
 const {
   title,
@@ -23,6 +25,7 @@ const {
   noindex = false,
   hreflangIT,
   hreflangEN,
+  alternateLocalePaths,
 } = Astro.props;
 const siteUrl = "https://www.cinqueterretrip.info";
 const fullTitle = `${title} | Cinque Terre Trip`;
@@ -90,7 +93,7 @@ const fullTitle = `${title} | Cinque Terre Trip`;
     <slot name="head" />
   </head>
   <body class="font-body text-body bg-surface text-on-surface">
-    <Header />
+    <Header alternateLocalePaths={alternateLocalePaths} />
     <slot />
     <Footer />
   </body>

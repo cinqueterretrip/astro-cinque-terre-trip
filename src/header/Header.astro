@@ -5,6 +5,12 @@ import { getLocalePath, type Locale } from "@/lib/i18n/config";
 import { Picture } from "astro:assets";
 import profileImage from "@/assets/images/profile.jpg";
 
+interface Props {
+  alternateLocalePaths?: Partial<Record<Locale, string>>;
+}
+
+const { alternateLocalePaths } = Astro.props as Props;
+
 const currentLocale = (Astro.currentLocale ?? "it") as Locale;
 const homeHref = getLocalePath(currentLocale, "/");
 const homeLabelByLocale: Record<Locale, string> = {
@@ -52,6 +58,7 @@ const isCurrentPageHome =
       <LanguageSwitcher
         currentPath={Astro.url.pathname}
         currentLocale={currentLocale}
+        alternateLocalePaths={alternateLocalePaths}
       />
       <!-- <button
         class="bg-primary text-white px-stack-lg py-2 rounded-DEFAULT font-label-sm text-label-sm hover:opacity-90 active:scale-95 transition-all"

@@ -35,6 +35,10 @@ export async function fetchVillages(lang: Locale) {
       title,
       subtitle,
       slug,
+      "translations": *[_type == "translation.metadata" && references(^._id)][0].translations[].value->{
+        language,
+        "slug": slug.current
+      },
       tagline,
       text,
       quickFacts {

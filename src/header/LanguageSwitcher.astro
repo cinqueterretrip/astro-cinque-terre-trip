@@ -10,9 +10,11 @@ import {
 interface Props {
   currentPath: string;
   currentLocale: Locale;
+  alternateLocalePaths?: Partial<Record<Locale, string>>;
 }
 
-const { currentPath, currentLocale } = Astro.props;
+const { currentPath, currentLocale, alternateLocalePaths } =
+  Astro.props as Props;
 ---
 
 <nav aria-label="Language switcher" class="relative inline-block text-left">
@@ -49,7 +51,9 @@ const { currentPath, currentLocale } = Astro.props;
     <ul class="p-2 space-y-1" aria-labelledby="dropdownNvbarButton">
       {
         LOCALES.map((locale) => {
-          const href = switchLocalePath(currentPath || "", locale);
+          const href =
+            alternateLocalePaths?.[locale] ??
+            switchLocalePath(currentPath || "", locale);
           const isActive = locale === currentLocale;
 
           return (
