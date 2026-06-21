@@ -1,0 +1,118 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { DEFAULT_LOCALE, type Locale } from "../../lib/i18n/config";
+import { ROUTE_MAP } from "../../lib/i18n/routes";
+import { posterImage } from "../../lib/sanity/image";
+import { fetchVillages } from "../../lib/sanity/queries/villages";
+import { ArrowForward } from "../../icons";
+
+type Image = {
+  alt?: string;
+  asset: {
+    _id: string;
+    url: string;
+    metadata: {
+      dimensions: { width: number; height: number };
+      lqip?: string;
+    };
+  };
+};
+
+interface Village {
+  _id: string;
+  language?: Locale;
+  title: string;
+  subtitle?: string;
+  slug: string;
+  tagline?: string;
+  heroImage: Image;
+  seo: {
+    title: string;
+    description: string;
+  };
+}
+
+const lang = DEFAULT_LOCALE;
+const villages: Village[] = await fetchVillages(lang);
+const villageSegment = ROUTE_MAP.villages[lang];
+---
+
+<BaseLayout
+  title="Scopri i Borghi delle Cinque Terre | Cinque Terre Trip"
+  description="Esplora i pittoreschi borghi delle Cinque Terre: Riomaggiore, Manarola, Corniglia, Vernazza e Monterosso al Mare. Scopri la loro storia, cultura e bellezze naturali."
+  locale={lang}
+>
+  <!-- Header Section -->
+  <section
+    class="pt-20 pb-stack-xl px-margin-mobile max-w-container-max mx-auto text-center"
+  >
+    <span
+      class="font-label-sm text-label-sm uppercase tracking-widest text-primary mb-stack-sm block"
+      >Lungo la costa ligure</span
+    >
+    <h1
+      class="font-headline text-5xl font-semibold text-headline-h1-mobile md:text-headline-h1 text-on-surface max-w-2xl mx-auto"
+    >
+      I Cinque Borghi che ti rubano il cuore
+    </h1>
+    <div class="w-16 h-px bg-outline-variant mx-auto mt-stack-lg"></div>
+  </section>
+  <main
+    class="max-w-container-max mx-auto px-margin-mobile pb-stack-xl space-y-24 md:space-y-40"
+    id="main-content"
+  >
+    {
+      villages.map((village, index) => {
+        const isFlipped = index % 2 !== 0;
+        const image = posterImage(village.heroImage);
+        const href = `/${villageSegment}/${encodeURIComponent(village.slug)}`;
+
+        return (
+          <section class="flex flex-col md:flex-row items-center gap-stack-lg lg:gap-gutter">
+            <div
+              class={`w-full md:w-3/5 order-1 ${isFlipped ? "md:order-2" : "md:order-1"}`}
+            >
+              <div class="editorial-image-mask overflow-hidden rounded-lg aspect-4/3 md:aspect-video relative group">
+                <img
+                  class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  src={image.src}
+                  srcset={image.srcSet}
+                  sizes={image.sizes}
+                  alt={village.heroImage.alt ?? village.title}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                />
+                <div class="absolute inset-0 bg-black/5 pointer-events-none" />
+              </div>
+            </div>
+
+            <div
+              class={`w-full md:w-2/5 order-2 px-stack-md text-center ${isFlipped ? "md:order-1 md:text-right" : "md:order-2 md:text-left"}`}
+            >
+              {village.subtitle && (
+                <span class="font-label-sm text-label-sm text-secondary uppercase mb-stack-xs block">
+                  {village.subtitle}
+                </span>
+              )}
+              <h2 class="font-headline text-headline-h2 text-on-surface mb-stack-sm">
+                {village.title}
+              </h2>
+              {village.tagline && (
+                <p class="font-body-lg text-body-lg text-on-surface-variant italic mb-stack-lg">
+                  "{village.tagline}"
+                </p>
+              )}
+              <a
+                class="inline-flex items-center gap-stack-xs text-primary font-bold border-b-2 border-primary pb-stack-xs"
+                href={href}
+              >
+                Scopri il borgo
+                <ArrowForward dimension="18px" />
+              </a>
+            </div>
+          </section>
+        );
+      })
+    }
+  </main>
+</BaseLayout>
