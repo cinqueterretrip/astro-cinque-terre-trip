@@ -1,0 +1,128 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { DEFAULT_LOCALE } from "../../lib/i18n/config";
+import { ROUTE_MAP } from "../../lib/i18n/routes";
+import { cardImage } from "../../lib/sanity/image";
+import { fetchHikingCards } from "../../lib/sanity/queries/hikings";
+import { ChevronRight } from "../../icons";
+
+type Image = {
+  alt?: string;
+  asset: {
+    _id: string;
+    url: string;
+    metadata: {
+      dimensions: { width: number; height: number };
+      lqip?: string;
+    };
+  };
+};
+
+interface Hiking {
+  _id: string;
+  title: string;
+  articleType?: string;
+  slug: string;
+  tagline?: string;
+  heroImage: Image;
+}
+
+const lang = DEFAULT_LOCALE;
+const hikings: Hiking[] = await fetchHikingCards(lang);
+const hikingSegment = ROUTE_MAP.hiking[lang];
+---
+
+<BaseLayout
+  title="Escursioni alle Cinque Terre: guide e itinerari | Cinque Terre Trip"
+  description="Scopri tutte le escursioni alle Cinque Terre: itinerari panoramici, consigli pratici e guide complete per organizzare il tuo viaggio tra sentieri, borghi e mare."
+  locale={lang}
+>
+  <main
+    class="max-w-container-max mx-auto px-margin-mobile pb-stack-xl space-y-24 md:space-y-40 pt-32"
+    id="main-content"
+  >
+    <section class="mx-auto px-margin-mobile lg:px-stack-xl mb-stack-xl">
+      <span
+        class="font-label-sm text-label-sm uppercase tracking-[0.2em] text-primary mb-stack-sm block"
+        >Diario di viaggio</span
+      >
+      <h1
+        class="font-headline text-headline-h1 md:text-display-lg max-w-3xl leading-tight"
+      >
+        Escursioni e itinerari autentici nelle Cinque Terre
+      </h1>
+      <p
+        class="font-body-lg text-body-lg text-on-surface-variant mt-stack-md max-w-xl"
+      >
+        Dalle passeggiate vista mare ai percorsi piu panoramici, trovi raccolte
+        qui guide curate, consigli locali e idee pratiche per vivere la Riviera
+        Ligure con il ritmo giusto.
+      </p>
+    </section>
+
+    <section class="bg-surface-container-low py-stack-xl rounded-xl">
+      <div class="mx-auto px-margin-mobile lg:px-stack-xl">
+        <div
+          class="flex flex-col md:flex-row md:items-end justify-between mb-stack-lg gap-stack-md"
+        >
+          <div>
+            <h2 class="font-headline text-headline-h2">Ultime escursioni</h2>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter lg:gap-stack-lg">
+          {
+            hikings.map((hiking) => {
+              const image = cardImage(hiking.heroImage);
+              const href = `/${hikingSegment}/${encodeURIComponent(hiking.slug)}`;
+
+              return (
+                <article class="group bg-white rounded-xl overflow-hidden editorial-shadow">
+                  <div class="relative aspect-[1.37] overflow-hidden">
+                    <img
+                      alt={hiking.heroImage.alt ?? hiking.title}
+                      class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      src={image.src}
+                      srcset={image.srcSet}
+                      sizes={image.sizes}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-300" />
+                  </div>
+
+                  <div class="p-stack-lg flex flex-col gap-stack-sm">
+                    <div class="flex items-center gap-2">
+                      {hiking.articleType && (
+                        <span class="font-label-sm text-[11px] uppercase tracking-widest text-primary bg-primary/5 px-2 py-1 rounded-sm">
+                          {hiking.articleType}
+                        </span>
+                      )}
+                    </div>
+
+                    <h3 class="font-headline text-headline-h3 leading-snug text-on-surface group-hover:text-primary transition-colors">
+                      {hiking.title}
+                    </h3>
+
+                    <p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">
+                      {hiking.tagline ??
+                        "Scopri l'itinerario completo con consigli pratici e spunti locali per vivere al meglio le Cinque Terre."}
+                    </p>
+
+                    <a
+                      class="mt-stack-sm flex items-center gap-stack-xs font-label-sm text-label-sm text-secondary hover:text-primary transition-colors uppercase tracking-widest"
+                      href={href}
+                    >
+                      Leggi l'articolo
+                      <ChevronRight dimension="18px" />
+                    </a>
+                  </div>
+                </article>
+              );
+            })
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

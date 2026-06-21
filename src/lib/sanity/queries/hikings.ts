@@ -6,6 +6,7 @@ export async function fetchHikingCards(lang: Locale) {
     `*[_type == "hiking" && language == $lang] | order(coalesce(order, 9999) asc, _createdAt asc) {
       _id,
       title,
+      articleType,
       tagline,
       "slug": slug.current,
       heroImage {
