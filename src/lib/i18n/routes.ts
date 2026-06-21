@@ -1,4 +1,4 @@
-import type { Locale } from "./config";
+import type { Locale } from "@/lib/i18n/config";
 // lib/i18n/routes.ts  — unica fonte di verità
 export const ROUTE_MAP: Record<string, Record<Locale, string>> = {
   villages: {

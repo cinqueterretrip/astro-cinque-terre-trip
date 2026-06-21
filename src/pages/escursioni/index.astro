@@ -1,10 +1,10 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import { DEFAULT_LOCALE } from "../../lib/i18n/config";
-import { ROUTE_MAP } from "../../lib/i18n/routes";
-import { cardImage } from "../../lib/sanity/image";
-import { fetchHikingCards } from "../../lib/sanity/queries/hikings";
-import { ChevronRight } from "../../icons";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { DEFAULT_LOCALE } from "@/lib/i18n/config";
+import { ROUTE_MAP } from "@/lib/i18n/routes";
+import { cardImage } from "@/lib/sanity/image";
+import { fetchHikingCards } from "@/lib/sanity/queries/hikings";
+import { ChevronRight } from "@/icons";
 
 type Image = {
   alt?: string;

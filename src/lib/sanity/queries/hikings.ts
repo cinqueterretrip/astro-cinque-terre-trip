@@ -1,5 +1,5 @@
 import { sanityClient } from "sanity:client";
-import type { Locale } from "../../i18n/config";
+import type { Locale } from "@/lib/i18n/config";
 
 export async function fetchHikingCards(lang: Locale) {
   return sanityClient.fetch(

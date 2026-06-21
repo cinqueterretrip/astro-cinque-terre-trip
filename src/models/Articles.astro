@@ -1,10 +1,10 @@
 ---
 import { PortableText } from "astro-portabletext";
-import type { Locale } from "../lib/i18n/config";
-import { t } from "../lib/i18n/ui";
-import { extractPortableTextToc } from "../lib/portabletext/toc";
-import { Info, Share, ThumbUp } from "../icons";
-import "../styles/content.css";
+import type { Locale } from "@/lib/i18n/config";
+import { t } from "@/lib/i18n/ui";
+import { extractPortableTextToc } from "@/lib/portabletext/toc";
+import { Info, Share, ThumbUp } from "@/icons";
+import "@/styles/content.css";
 
 interface Article {
   _id: string;
@@ -242,8 +242,8 @@ const initialLikesCount =
 </div>
 
 <script>
-  import { setupArticleShare } from "../lib/article-share";
-  import { setupArticleLikes } from "../lib/article-likes";
+  import { setupArticleShare } from "@/lib/article-share";
+  import { setupArticleLikes } from "@/lib/article-likes";
 
   setupArticleShare("#share-article-button", "#share-toast");
   setupArticleLikes("#article-like-button", "#article-like-count");

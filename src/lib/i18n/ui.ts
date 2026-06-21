@@ -1,4 +1,4 @@
-import type { Locale } from "./config";
+import type { Locale } from "@/lib/i18n/config";
 
 const ui = {
   it: {

@@ -1,5 +1,5 @@
 import { sanityClient } from "sanity:client";
-import type { Locale } from "../../i18n/config";
+import type { Locale } from "@/lib/i18n/config";
 
 // Query leggera per le card in home: payload minimo e ordinamento stabile.
 export async function fetchVillageCards(lang: Locale) {

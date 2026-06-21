@@ -1,5 +1,5 @@
 import { sanityClient } from "sanity:client";
-import type { Locale } from "../../i18n/config";
+import type { Locale } from "@/lib/i18n/config";
 
 // Il documento singleton ha _id fisso: "homePage-it" o "homePage-en"
 // Più efficiente di filtrare per language: evita una collection scan

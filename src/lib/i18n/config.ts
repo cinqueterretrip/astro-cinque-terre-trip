@@ -1,4 +1,4 @@
-import { ROUTE_MAP } from "./routes";
+import { ROUTE_MAP } from "@/lib/i18n/routes";
 
 export const LOCALES = ["it", "en"] as const;
 export type Locale = (typeof LOCALES)[number];

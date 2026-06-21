@@ -1,9 +1,9 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import HeroVillages from "../../layouts/HeroVillages.astro";
-import Villages from "../../models/Villages.astro";
-import type { Locale } from "../../lib/i18n/config";
-import { fetchVillages } from "../../lib/sanity/queries/villages";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import HeroVillages from "@/layouts/HeroVillages.astro";
+import Villages from "@/models/Villages.astro";
+import type { Locale } from "@/lib/i18n/config";
+import { fetchVillages } from "@/lib/sanity/queries/villages";
 
 type Image = {
   alt?: string;

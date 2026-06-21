@@ -1,9 +1,9 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import ArticleHero from "../../layouts/ArticleHero.astro";
-import Articles from "../../models/Articles.astro";
-import type { Locale } from "../../lib/i18n/config";
-import { fetchHikings } from "../../lib/sanity/queries/hikings";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ArticleHero from "@/layouts/ArticleHero.astro";
+import Articles from "@/models/Articles.astro";
+import type { Locale } from "@/lib/i18n/config";
+import { fetchHikings } from "@/lib/sanity/queries/hikings";
 import readingTime from "reading-time";
 
 type Image = {
