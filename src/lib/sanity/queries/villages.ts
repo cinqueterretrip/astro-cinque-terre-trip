@@ -8,7 +8,7 @@ export async function fetchVillageCards(lang: Locale) {
       _id,
       title,
       tagline,
-      slug,
+      "slug": coalesce(slug.current, slug),
       heroImage {
         alt,
         asset-> {
@@ -34,10 +34,10 @@ export async function fetchVillages(lang: Locale) {
       language,
       title,
       subtitle,
-      slug,
+      "slug": coalesce(slug.current, slug),
       "translations": *[_type == "translation.metadata" && references(^._id)][0].translations[].value->{
         language,
-        "slug": slug.current
+        "slug": coalesce(slug.current, slug)
       },
       tagline,
       text,
