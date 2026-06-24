@@ -21,7 +21,7 @@ type TocOptions = {
   styles?: string[];
 };
 
-const DEFAULT_STYLES = ["h2", "h3"];
+const DEFAULT_STYLES = ["h2"];
 
 function normalizeStyle(value: string): string {
   return value.trim().toLowerCase();

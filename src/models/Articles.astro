@@ -35,7 +35,7 @@ const { article, lang } = Astro.props as Props;
 const articleTextBlocks = Array.isArray(article.text) ? article.text : [];
 const hasLocalTips = Boolean(article.localTips?.trim());
 const tocHeadings = extractPortableTextToc(articleTextBlocks, {
-  styles: ["h2", "h3"],
+  styles: ["h2"],
 });
 const tocIds = tocHeadings.map((heading) => heading.id);
 const tocIdsSerialized = JSON.stringify(tocIds);
@@ -257,7 +257,7 @@ const initialLikesCount =
       const tocIds = Array.isArray(parsedTocIds)
         ? parsedTocIds.filter((value) => typeof value === "string")
         : [];
-      const headingElements = articleElement.querySelectorAll("h2, h3");
+      const headingElements = articleElement.querySelectorAll("h2");
 
       headingElements.forEach((headingElement, index) => {
         const id = tocIds[index];
