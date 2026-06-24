@@ -26,4 +26,12 @@
     color: #97422d;
     font-weight: 700;
   }
+
+  ul {
+    @apply list-disc list-inside;
+
+    li::marker {
+      @apply text-primary;
+    }
+  }
 }
