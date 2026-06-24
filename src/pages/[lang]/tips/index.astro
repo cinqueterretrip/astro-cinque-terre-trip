@@ -5,7 +5,7 @@ import { getLocalePaths } from "@/lib/i18n/paths";
 import { ROUTE_MAP } from "@/lib/i18n/routes";
 import { t } from "@/lib/i18n/ui";
 import { cardImage } from "@/lib/sanity/image";
-import { fetchHikingCards } from "@/lib/sanity/queries/hikings";
+import { fetchTipCards } from "@/lib/sanity/queries/tips";
 import { ChevronRight } from "@/icons";
 
 type Image = {
@@ -20,7 +20,7 @@ type Image = {
   };
 };
 
-interface Hiking {
+interface Tip {
   _id: string;
   title: string;
   articleType?: string;
@@ -34,13 +34,13 @@ export function getStaticPaths() {
 }
 
 const lang = (Astro.currentLocale ?? "en") as Locale;
-const hikings: Hiking[] = await fetchHikingCards(lang);
-const hikingSegment = ROUTE_MAP.hiking[lang];
+const tips: Tip[] = await fetchTipCards(lang);
+const tipsSegment = ROUTE_MAP.tips[lang];
 ---
 
 <BaseLayout
-  title={t(lang, "hikings.pageTitle")}
-  description={t(lang, "hikings.pageDescription")}
+  title={t(lang, "tips.pageTitle")}
+  description={t(lang, "tips.pageDescription")}
   locale={lang}
 >
   <main
@@ -50,17 +50,17 @@ const hikingSegment = ROUTE_MAP.hiking[lang];
     <section class="mx-auto px-margin-mobile lg:px-stack-xl mb-stack-xl">
       <span
         class="font-label-sm text-label-sm uppercase tracking-[0.2em] text-primary mb-stack-sm block"
-        >{t(lang, "hikings.eyebrow")}</span
+        >{t(lang, "tips.eyebrow")}</span
       >
       <h1
         class="font-headline text-headline-h1 md:text-display-lg max-w-3xl leading-tight"
       >
-        {t(lang, "hikings.heading")}
+        {t(lang, "tips.heading")}
       </h1>
       <p
         class="font-body-lg text-body-lg text-on-surface-variant mt-stack-md max-w-xl"
       >
-        {t(lang, "hikings.intro")}
+        {t(lang, "tips.intro")}
       </p>
     </section>
 
@@ -71,25 +71,25 @@ const hikingSegment = ROUTE_MAP.hiking[lang];
         >
           <div>
             <h2 class="font-headline text-headline-h2">
-              {t(lang, "hikings.latestSectionTitle")}
+              {t(lang, "tips.latestSectionTitle")}
             </h2>
           </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter lg:gap-stack-lg">
           {
-            hikings.map((hiking) => {
-              const image = cardImage(hiking.heroImage);
+            tips.map((tip) => {
+              const image = cardImage(tip.heroImage);
               const href = getLocalePath(
                 lang,
-                `/${hikingSegment}/${encodeURIComponent(hiking.slug)}`,
+                `/${tipsSegment}/${encodeURIComponent(tip.slug)}`,
               );
 
               return (
                 <article class="group bg-white rounded-xl overflow-hidden editorial-shadow">
                   <div class="relative aspect-[1.37] overflow-hidden">
                     <img
-                      alt={hiking.heroImage.alt ?? hiking.title}
+                      alt={tip.heroImage.alt ?? tip.title}
                       class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       src={image.src}
                       srcset={image.srcSet}
@@ -102,19 +102,20 @@ const hikingSegment = ROUTE_MAP.hiking[lang];
 
                   <div class="p-stack-lg flex flex-col gap-stack-sm">
                     <div class="flex items-center gap-2">
-                      {hiking.articleType && (
+                      {tip.articleType && (
                         <span class="font-label-sm text-[11px] uppercase tracking-widest text-primary bg-primary/5 px-2 py-1 rounded-sm">
-                          {hiking.articleType}
+                          {tip.articleType}
                         </span>
                       )}
                     </div>
 
                     <h3 class="font-headline text-headline-h3 leading-snug text-on-surface group-hover:text-primary transition-colors">
-                      {hiking.title}
+                      {tip.title}
                     </h3>
-                    {hiking.tagline && (
+
+                    {tip.tagline && (
                       <p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">
-                        {hiking.tagline}
+                        {tip.tagline}
                       </p>
                     )}
 
