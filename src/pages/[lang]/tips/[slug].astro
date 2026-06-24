@@ -1,0 +1,115 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ArticleHero from "@/layouts/ArticleHero.astro";
+import Articles from "@/models/Articles.astro";
+import { buildAlternateLocalePaths } from "@/lib/i18n/alternate-paths";
+import type { Locale } from "@/lib/i18n/config";
+import { getLocalePaths } from "@/lib/i18n/paths";
+import { fetchTips } from "@/lib/sanity/queries/tips";
+import readingTime from "reading-time";
+
+type TranslationEntry = {
+  language?: Locale;
+  slug?: string;
+};
+
+type Image = {
+  alt?: string;
+  asset: {
+    _id: string;
+    url: string;
+    metadata: {
+      dimensions: { width: number; height: number };
+      lqip?: string;
+    };
+  };
+};
+
+interface Tip {
+  _id: string;
+  language?: Locale;
+  title: string;
+  articleType?: string;
+  slug: string;
+  translations?: TranslationEntry[];
+  tagline?: string;
+  localTips?: string;
+  likesCount?: number;
+  text?: [];
+  asideHint?: {
+    title?: string;
+    text?: string;
+  };
+  heroImage: Image;
+  seo: {
+    title: string;
+    description: string;
+  };
+}
+
+interface Props {
+  lang: Locale;
+  tip: Tip;
+}
+
+const { tip, lang } = Astro.props as Props;
+const alternateLocalePaths = buildAlternateLocalePaths("tips", tip, lang);
+
+type PortableTextChild = { text?: string };
+type PortableTextBlock = { _type: string; children?: PortableTextChild[] };
+
+const plainText = ((tip.text ?? []) as PortableTextBlock[])
+  .filter((b) => b._type === "block")
+  .flatMap((b) => b.children ?? [])
+  .map((c) => c.text ?? "")
+  .join(" ");
+const articleReadingTime = Math.ceil(readingTime(plainText).minutes) || 1;
+
+const heroBackgroundImage = {
+  ...tip.heroImage,
+  alt: tip.heroImage.alt ?? tip.title,
+  asset: {
+    ...tip.heroImage.asset,
+    metadata: {
+      ...tip.heroImage.asset.metadata,
+      lqip: tip.heroImage.asset.metadata.lqip ?? "",
+    },
+  },
+};
+
+export async function getStaticPaths() {
+  const localePaths = getLocalePaths() as Array<{ params: { lang: Locale } }>;
+
+  const paths = await Promise.all(
+    localePaths.map(async ({ params }) => {
+      const lang = params.lang;
+      const tips: Tip[] = await fetchTips(lang);
+
+      return tips.map((tip) => ({
+        params: { lang, slug: tip.slug },
+        props: { lang, tip },
+      }));
+    }),
+  );
+
+  return paths.flat();
+}
+---
+
+<BaseLayout
+  title={tip.seo?.title}
+  description={tip.seo?.description}
+  locale={lang}
+  alternateLocalePaths={alternateLocalePaths}
+>
+  <ArticleHero
+    lang={lang}
+    title={tip.title}
+    articleType={tip.articleType}
+    readingTime={articleReadingTime}
+    backgroundImage={heroBackgroundImage}
+  />
+  <main id="main-content">
+    <Articles article={tip} lang={lang} />
+  </main>
+</BaseLayout>

@@ -14,7 +14,14 @@ type LikesQueryResult = {
   likesCount?: number;
 };
 
+type ArticleTypeQueryResult = {
+  _type?: string;
+};
+
 const API_VERSION = "2025-02-19";
+const DEFAULT_LIKES_DOCUMENT_TYPES = ["hiking", "tips", "consigli"] as const;
+
+type LikesDocumentType = (typeof DEFAULT_LIKES_DOCUMENT_TYPES)[number];
 
 function jsonResponse(status: number, body: Record<string, unknown>): Response {
   return new Response(JSON.stringify(body), {
@@ -59,12 +66,33 @@ function getWriteClient() {
   });
 }
 
-async function readLikesCount(articleId: string): Promise<number> {
-  const result = await sanityClient.fetch<LikesQueryResult | null>(
-    `*[_type == "hiking" && _id == $articleId][0]{
-      "likesCount": coalesce(likesCount, 0)
+function isSupportedLikesDocumentType(
+  value: string,
+  documentTypes: readonly LikesDocumentType[],
+): boolean {
+  return documentTypes.some((documentType) => documentType === value);
+}
+
+async function readArticleType(articleId: string): Promise<string | null> {
+  const result = await sanityClient.fetch<ArticleTypeQueryResult | null>(
+    `*[_id == $articleId][0]{
+      _type
     }`,
     { articleId },
+  );
+
+  return typeof result?._type === "string" ? result._type : null;
+}
+
+async function readLikesCount(
+  articleId: string,
+  documentTypes: readonly LikesDocumentType[] = DEFAULT_LIKES_DOCUMENT_TYPES,
+): Promise<number> {
+  const result = await sanityClient.fetch<LikesQueryResult | null>(
+    `*[_id == $articleId && _type in $documentTypes][0]{
+      "likesCount": coalesce(likesCount, 0)
+    }`,
+    { articleId, documentTypes },
   );
 
   return normalizeCount(result?.likesCount);
@@ -74,6 +102,14 @@ export const GET: APIRoute = async ({ url }) => {
   const articleId = url.searchParams.get("id")?.trim();
   if (!articleId || !isSafeDocumentId(articleId)) {
     return jsonResponse(400, { error: "invalid-article-id" });
+  }
+
+  const articleType = await readArticleType(articleId);
+  if (
+    !articleType ||
+    !isSupportedLikesDocumentType(articleType, DEFAULT_LIKES_DOCUMENT_TYPES)
+  ) {
+    return jsonResponse(400, { error: "unsupported-article-type" });
   }
 
   const likesCount = await readLikesCount(articleId);
@@ -106,6 +142,14 @@ export const POST: APIRoute = async ({ request }) => {
 
   if (action !== "like" && action !== "unlike") {
     return jsonResponse(400, { error: "invalid-action" });
+  }
+
+  const articleType = await readArticleType(articleId);
+  if (
+    !articleType ||
+    !isSupportedLikesDocumentType(articleType, DEFAULT_LIKES_DOCUMENT_TYPES)
+  ) {
+    return jsonResponse(400, { error: "unsupported-article-type" });
   }
 
   const currentCount = await readLikesCount(articleId);
