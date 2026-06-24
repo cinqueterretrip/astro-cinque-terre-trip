@@ -1,0 +1,128 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { DEFAULT_LOCALE } from "@/lib/i18n/config";
+import { ROUTE_MAP } from "@/lib/i18n/routes";
+import { cardImage } from "@/lib/sanity/image";
+import { fetchTipCards } from "@/lib/sanity/queries/tips";
+import { ChevronRight } from "@/icons";
+
+type Image = {
+  alt?: string;
+  asset: {
+    _id: string;
+    url: string;
+    metadata: {
+      dimensions: { width: number; height: number };
+      lqip?: string;
+    };
+  };
+};
+
+interface Tip {
+  _id: string;
+  title: string;
+  articleType?: string;
+  slug: string;
+  tagline?: string;
+  heroImage: Image;
+}
+
+const lang = DEFAULT_LOCALE;
+const tips: Tip[] = await fetchTipCards(lang);
+const tipsSegment = ROUTE_MAP.tips[lang];
+---
+
+<BaseLayout
+  title="Consigli Cinque Terre: ristoranti, periodi e cose da fare | Cinque Terre Trip"
+  description="Scopri i migliori consigli per le Cinque Terre: dove mangiare bene, quando partire e cosa fare tra borghi, mare e sentieri per organizzare il viaggio ideale."
+  locale={lang}
+>
+  <main
+    class="max-w-container-max mx-auto px-margin-mobile pb-stack-xl space-y-24 md:space-y-40 pt-32"
+    id="main-content"
+  >
+    <section class="mx-auto px-margin-mobile lg:px-stack-xl mb-stack-xl">
+      <span
+        class="font-label-sm text-label-sm uppercase tracking-[0.2em] text-primary mb-stack-sm block"
+        >Guida pratica</span
+      >
+      <h1
+        class="font-headline text-headline-h1 md:text-display-lg max-w-3xl leading-tight"
+      >
+        Consigli pratici e idee autentiche per le Cinque Terre
+      </h1>
+      <p
+        class="font-body-lg text-body-lg text-on-surface-variant mt-stack-md max-w-xl"
+      >
+        Dai ristoranti tipici ai periodi migliori per partire, trovi qui guide
+        curate, consigli locali e idee pratiche su cosa fare per vivere la
+        Riviera Ligure con il ritmo giusto.
+      </p>
+    </section>
+
+    <section class="bg-surface-container-low py-stack-xl rounded-xl">
+      <div class="mx-auto px-margin-mobile lg:px-stack-xl">
+        <div
+          class="flex flex-col md:flex-row md:items-end justify-between mb-stack-lg gap-stack-md"
+        >
+          <div>
+            <h2 class="font-headline text-headline-h2">Ultimi consigli</h2>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter lg:gap-stack-lg">
+          {
+            tips.map((tip) => {
+              const image = cardImage(tip.heroImage);
+              const href = `/${tipsSegment}/${encodeURIComponent(tip.slug)}`;
+
+              return (
+                <article class="group bg-white rounded-xl overflow-hidden editorial-shadow">
+                  <div class="relative aspect-[1.37] overflow-hidden">
+                    <img
+                      alt={tip.heroImage.alt ?? tip.title}
+                      class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      src={image.src}
+                      srcset={image.srcSet}
+                      sizes={image.sizes}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-300" />
+                  </div>
+
+                  <div class="p-stack-lg flex flex-col gap-stack-sm">
+                    <div class="flex items-center gap-2">
+                      {tip.articleType && (
+                        <span class="font-label-sm text-[11px] uppercase tracking-widest text-primary bg-primary/5 px-2 py-1 rounded-sm">
+                          {tip.articleType}
+                        </span>
+                      )}
+                    </div>
+
+                    <h3 class="font-headline text-headline-h3 leading-snug text-on-surface group-hover:text-primary transition-colors">
+                      {tip.title}
+                    </h3>
+
+                    <p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">
+                      {tip.tagline ??
+                        "Scopri consigli pratici e spunti locali su ristoranti, periodi migliori e cose da fare alle Cinque Terre."}
+                    </p>
+
+                    <a
+                      class="mt-stack-sm flex items-center gap-stack-xs font-label-sm text-label-sm text-secondary hover:text-primary transition-colors uppercase tracking-widest"
+                      href={href}
+                    >
+                      Leggi l'articolo
+                      <ChevronRight dimension="18px" />
+                    </a>
+                  </div>
+                </article>
+              );
+            })
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
