@@ -1,23 +1,30 @@
 ---
 import { Picture } from "astro:assets";
 import profileImage from "@/assets/images/profile.jpg";
+import type { Locale } from "@/lib/i18n/config";
+import { t } from "@/lib/i18n/ui";
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props as Props;
 ---
 
 <section
   class="max-w-300 mx-auto my-stack-xl bg-secondary rounded-2xl py-stack-xl px-gutter text-center text-white"
 >
   <h2 class="font-headline text-headline-h1 mb-stack-md">
-    Join Our Official Channel
+    {t(lang, "channel.title")}
   </h2>
   <p class="text-white/80 mb-stack-lg max-w-xl mx-auto">
-    This Instagram channel is the only official way we share the latest Cinque
-    Terre news, travel updates, and local tips with our community.
+    {t(lang, "channel.description")}
   </p>
 
   <div class="flex flex-col items-center gap-4">
     <Picture
       src={profileImage}
-      alt="Profile picture of Cinque Terre Trip Instagram channel"
+      alt={t(lang, "channel.profileAlt")}
       width={80}
       height={80}
       class="w-20 h-20 rounded-full border-2 border-white/30 object-cover"
@@ -34,7 +41,7 @@ import profileImage from "@/assets/images/profile.jpg";
       rel="noopener noreferrer"
       class="inline-flex items-center justify-center bg-primary text-white px-stack-lg py-3 rounded-lg font-bold hover:bg-primary-container transition-all"
     >
-      Join the Channel
+      {t(lang, "channel.joinCta")}
     </a>
   </div>
 </section>

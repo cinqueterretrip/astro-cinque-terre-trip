@@ -47,6 +47,12 @@ const ui = {
     "tips.latestSectionTitle": "Ultimi consigli",
     "tips.fallbackTagline":
       "Scopri consigli pratici e spunti locali su ristoranti, periodi migliori e cose da fare alle Cinque Terre.",
+    "channel.title": "Unisciti al nostro canale ufficiale",
+    "channel.description":
+      "Questo canale Instagram è l'unico modo ufficiale in cui condividiamo con la nostra community le ultime notizie sulle Cinque Terre, aggiornamenti di viaggio e consigli locali.",
+    "channel.profileAlt":
+      "Foto profilo del canale Instagram di Cinque Terre Trip",
+    "channel.joinCta": "Unisciti al canale",
   },
   en: {
     "hero.cta": "Explore the Villages",
@@ -94,6 +100,12 @@ const ui = {
     "tips.latestSectionTitle": "Latest tips",
     "tips.fallbackTagline":
       "Discover practical tips and local insights on restaurants, the best travel periods, and things to do in Cinque Terre.",
+    "channel.title": "Join Our Official Channel",
+    "channel.description":
+      "This Instagram channel is the only official way we share the latest Cinque Terre news, travel updates, and local tips with our community.",
+    "channel.profileAlt":
+      "Profile picture of Cinque Terre Trip Instagram channel",
+    "channel.joinCta": "Join the Channel",
   },
 } as const;
 
