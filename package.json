@@ -22,6 +22,7 @@
     "astro-portabletext": "^0.13.0",
     "embla-carousel": "^8.6.0",
     "sanity": "^5.26.0",
+    "sharp": "^0.35.2",
     "tailwindcss": "^4.2.1"
   },
   "devDependencies": {
