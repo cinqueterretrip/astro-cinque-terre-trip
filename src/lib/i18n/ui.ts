@@ -53,6 +53,17 @@ const ui = {
     "channel.profileAlt":
       "Foto profilo del canale Instagram di Cinque Terre Trip",
     "channel.joinCta": "Unisciti al canale",
+    "footer.discover": "Scopri",
+    "footer.resources": "Risorse",
+    "footer.followJourney": "Segui il viaggio",
+    "footer.villages": "Borghi",
+    "footer.experiences": "Esperienze",
+    "footer.beaches": "Spiagge",
+    "footer.hiking": "Escursioni",
+    "footer.tips": "Consigli",
+    "footer.privacyPolicy": "Privacy Policy",
+    "footer.terms": "Termini di servizio",
+    "footer.rightsReserved": "Tutti i diritti riservati.",
   },
   en: {
     "hero.cta": "Explore the Villages",
@@ -106,6 +117,17 @@ const ui = {
     "channel.profileAlt":
       "Profile picture of Cinque Terre Trip Instagram channel",
     "channel.joinCta": "Join the Channel",
+    "footer.discover": "Discover",
+    "footer.resources": "Resources",
+    "footer.followJourney": "Follow the Journey",
+    "footer.villages": "Villages",
+    "footer.experiences": "Experiences",
+    "footer.beaches": "Beaches",
+    "footer.hiking": "Hiking",
+    "footer.tips": "Tips",
+    "footer.privacyPolicy": "Privacy Policy",
+    "footer.terms": "Terms of Service",
+    "footer.rightsReserved": "All rights reserved.",
   },
 } as const;
 

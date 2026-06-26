@@ -1,5 +1,72 @@
 ---
 import { Instagram } from "@/icons";
+import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n/config";
+import { t } from "@/lib/i18n/ui";
+
+interface Props {
+  lang?: Locale;
+}
+
+const { lang = DEFAULT_LOCALE } = Astro.props as Props;
+
+type MenuLink = {
+  href: Record<Locale, string>;
+  labelKey:
+    | "footer.villages"
+    | "footer.experiences"
+    | "footer.beaches"
+    | "footer.hiking"
+    | "footer.tips";
+};
+
+const discoverLinks: MenuLink[] = [
+  {
+    href: {
+      it: "/borghi",
+      en: "/en/villages",
+    },
+    labelKey: "footer.villages",
+  },
+  {
+    href: {
+      it: "/esperienze",
+      en: "/en/experiences",
+    },
+    labelKey: "footer.experiences",
+  },
+  {
+    href: {
+      it: "/spiagge",
+      en: "/en/beaches",
+    },
+    labelKey: "footer.beaches",
+  },
+  {
+    href: {
+      it: "/escursioni",
+      en: "/en/hikings",
+    },
+    labelKey: "footer.hiking",
+  },
+];
+
+const resourcesLinks = [
+  {
+    href: {
+      it: "/consigli",
+      en: "/en/tips",
+    },
+    labelKey: "footer.tips" as const,
+  },
+  {
+    href: "#",
+    labelKey: "footer.privacyPolicy" as const,
+  },
+  {
+    href: "#",
+    labelKey: "footer.terms" as const,
+  },
+];
 ---
 
 <footer class="bg-secondary full-width">
@@ -11,64 +78,47 @@ import { Instagram } from "@/icons";
         Cinque Terre Trip
       </div>
       <p class="text-secondary-fixed-dim font-body-md text-body-md">
-        Your definitive guide to exploring the five villages of the Italian
-        Riviera with soul and style.
+        {t(lang, "footer.tagline")}
       </p>
     </div>
     <div>
-      <h4 class="font-bold mb-stack-md">Discover</h4>
+      <h4 class="font-bold mb-stack-md">{t(lang, "footer.discover")}</h4>
       <ul class="space-y-2">
-        <li>
-          <a
-            class="text-secondary-fixed-dim hover:text-tertiary-fixed-dim transition-colors"
-            href="#">Villages</a
-          >
-        </li>
-        <li>
-          <a
-            class="text-secondary-fixed-dim hover:text-tertiary-fixed-dim transition-colors"
-            href="#">Experiences</a
-          >
-        </li>
-        <li>
-          <a
-            class="text-secondary-fixed-dim hover:text-tertiary-fixed-dim transition-colors"
-            href="#">Beaches</a
-          >
-        </li>
-        <li>
-          <a
-            class="text-secondary-fixed-dim hover:text-tertiary-fixed-dim transition-colors"
-            href="#">Hiking</a
-          >
-        </li>
+        {
+          discoverLinks.map((item) => (
+            <li>
+              <a
+                class="text-secondary-fixed-dim hover:text-tertiary-fixed-dim transition-colors"
+                href={item.href[lang]}
+              >
+                {t(lang, item.labelKey)}
+              </a>
+            </li>
+          ))
+        }
       </ul>
     </div>
     <div>
-      <h4 class="font-bold mb-stack-md">Resources</h4>
+      <h4 class="font-bold mb-stack-md">{t(lang, "footer.resources")}</h4>
       <ul class="space-y-2">
-        <li>
-          <a
-            class="text-secondary-fixed-dim hover:text-tertiary-fixed-dim transition-colors"
-            href="#">Tips</a
-          >
-        </li>
-        <li>
-          <a
-            class="text-secondary-fixed-dim hover:text-tertiary-fixed-dim transition-colors"
-            href="#">Privacy Policy</a
-          >
-        </li>
-        <li>
-          <a
-            class="text-secondary-fixed-dim hover:text-tertiary-fixed-dim transition-colors"
-            href="#">Terms of Service</a
-          >
-        </li>
+        {
+          resourcesLinks.map((item) => (
+            <li>
+              <a
+                class="text-secondary-fixed-dim hover:text-tertiary-fixed-dim transition-colors"
+                href={
+                  typeof item.href === "string" ? item.href : item.href[lang]
+                }
+              >
+                {t(lang, item.labelKey)}
+              </a>
+            </li>
+          ))
+        }
       </ul>
     </div>
     <div>
-      <h4 class="font-bold mb-stack-md">Follow the Journey</h4>
+      <h4 class="font-bold mb-stack-md">{t(lang, "footer.followJourney")}</h4>
       <div class="flex gap-4">
         <a
           href="https://www.instagram.com/cinqueterretrip/"
@@ -84,6 +134,8 @@ import { Instagram } from "@/icons";
   <div
     class="max-w-container-max mx-auto px-gutter py-stack-md border-t border-white/10 text-center text-secondary-fixed-dim text-sm"
   >
-    © {new Date().getFullYear()} Cinque Terre Trip. All rights reserved.
+    © {new Date().getFullYear()} Cinque Terre Trip. {
+      t(lang, "footer.rightsReserved")
+    }
   </div>
 </footer>
