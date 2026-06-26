@@ -107,4 +107,14 @@
   --text-label-sm--line-height: 1.2;
   --text-label-sm--letter-spacing: 0.05em;
   --text-label-sm--font-weight: 600;
+
+  /* MOBILE TYPOGRAPHY */
+  --text-display-lg-mobile: 40px;
+  --text-display-lg-mobile--line-height: 1.1;
+  --text-display-lg-mobile--letter-spacing: -0.02em;
+  --text-display-lg-mobile--font-weight: 700;
+
+  --text-headline-h1-mobile: 30px;
+  --text-headline-h1-mobile--line-height: 1.2;
+  --text-headline-h1-mobile--font-weight: 600;
 }

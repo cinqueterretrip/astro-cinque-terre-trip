@@ -44,9 +44,12 @@ function getHikingHref(locale: Locale, slug: string) {
       class="bg-surface py-stack-xl border-t border-outline-variant/30"
       aria-labelledby="itineraries-heading"
     >
-      <div class="max-w-container-max mx-auto px-gutter">
+      <div class="max-w-container-max mx-auto px-margin-mobile md:px-gutter">
         <div class="flex items-center justify-between gap-4 mb-stack-xl">
-          <h2 id="itineraries-heading" class="font-headline text-headline-h1">
+          <h2
+            id="itineraries-heading"
+            class="font-headline text-headline-h1-mobile md:text-headline-h1"
+          >
             {t(lang, "home.hikingSectionTitle")}
           </h2>
 

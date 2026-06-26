@@ -35,3 +35,10 @@
     }
   }
 }
+
+@media (max-width: 639px) {
+  .main-text p:first-child::first-letter {
+    font-size: 3.5rem;
+    line-height: 3rem;
+  }
+}

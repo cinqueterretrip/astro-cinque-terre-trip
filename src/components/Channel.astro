@@ -12,9 +12,11 @@ const { lang } = Astro.props as Props;
 ---
 
 <section
-  class="max-w-300 mx-auto my-stack-xl bg-secondary rounded-2xl py-stack-xl px-gutter text-center text-white"
+  class="max-w-300 mx-auto my-stack-xl bg-secondary rounded-2xl py-stack-xl px-margin-mobile md:px-gutter text-center text-white"
 >
-  <h2 class="font-headline text-headline-h1 mb-stack-md">
+  <h2
+    class="font-headline text-headline-h1-mobile md:text-headline-h1 mb-stack-md"
+  >
     {t(lang, "channel.title")}
   </h2>
   <p class="text-white/80 mb-stack-lg max-w-xl mx-auto">

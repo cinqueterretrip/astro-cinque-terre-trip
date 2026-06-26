@@ -39,7 +39,7 @@ const image = heroImage(backgroundImage);
     fetchpriority="high"
   />
   <div class="absolute inset-0 bg-black/30"></div>
-  <div class="z-10 text-center max-w-4xl px-gutter">
+  <div class="z-10 text-center max-w-4xl px-margin-mobile md:px-gutter">
     {
       eyebrow && (
         <p class="font-label-sm text-label-sm text-white/90 uppercase tracking-widest mb-stack-md">
@@ -48,7 +48,7 @@ const image = heroImage(backgroundImage);
       )
     }
     <h1
-      class="font-headline text-display-lg text-white mb-stack-lg leading-tight"
+      class="font-headline text-display-lg-mobile md:text-display-lg text-white mb-stack-lg leading-tight"
     >
       {title}
     </h1>
@@ -60,7 +60,9 @@ const image = heroImage(backgroundImage);
       )
     }
     <!-- TODO: Aggiungere pulsanti per le lingue con le bandiere -->
-    <div class="flex items-center justify-center gap-stack-lg">
+    <div
+      class="flex flex-wrap items-center justify-center gap-stack-md md:gap-stack-lg"
+    >
       <a
         href="#main-content"
         class="bg-primary text-white px-8 py-4 rounded-DEFAULT font-body-md font-bold shadow-lg hover:shadow-xl transition-all"
