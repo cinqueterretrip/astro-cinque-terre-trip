@@ -20,7 +20,12 @@ const { lang } = Astro.props as Props;
 const [page] = await Promise.all([fetchHomePage(lang)]);
 ---
 
-<BaseLayout title={page.seo.title} description={page.seo.description}>
+<BaseLayout
+  title={page.seo.title}
+  description={page.seo.description}
+  locale={lang}
+  ogImage={page.seo.ogImage?.url}
+>
   <script
     slot="head"
     type="application/ld+json"
