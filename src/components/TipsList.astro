@@ -42,7 +42,7 @@ function getTipsHref(locale: Locale, slug: string) {
   tips.length > 0 && (
     <section class="py-stack-xl max-w-container-max mx-auto px-margin-mobile md:px-gutter">
       <h2 class="font-headline text-headline-h1-mobile md:text-headline-h1 mb-stack-xl">
-        Tips per organizzare il viaggio
+        {t(lang, "tips.home.title")}
       </h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-stack-xl">
         {tips.map((tip) => {
