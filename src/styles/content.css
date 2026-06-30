@@ -34,6 +34,10 @@
       @apply text-primary;
     }
   }
+
+  a {
+    @apply text-primary underline;
+  }
 }
 
 @media (max-width: 639px) {
