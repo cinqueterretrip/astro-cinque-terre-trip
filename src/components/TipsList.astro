@@ -3,7 +3,7 @@ import type { Locale } from "@/lib/i18n/config";
 import { getLocalePath } from "@/lib/i18n/config";
 import { ROUTE_MAP } from "@/lib/i18n/routes";
 import { cardImage } from "@/lib/sanity/image";
-import { fetchTipCards } from "@/lib/sanity/queries/tips";
+import { fetchTipCardsHome } from "@/lib/sanity/queries/tips";
 import { t } from "@/lib/i18n/ui";
 
 interface Props {
@@ -30,7 +30,7 @@ interface TipCard {
 }
 
 const { lang } = Astro.props as Props;
-const tips: TipCard[] = await fetchTipCards(lang);
+const tips: TipCard[] = await fetchTipCardsHome(lang);
 
 function getTipsHref(locale: Locale, slug: string) {
   const segment = ROUTE_MAP.tips[locale];
