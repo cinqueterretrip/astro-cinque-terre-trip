@@ -11,39 +11,41 @@ interface Props {
 const { lang } = Astro.props as Props;
 ---
 
-<section
-  class="max-w-300 mx-auto my-stack-xl bg-secondary rounded-2xl py-stack-xl px-margin-mobile md:px-gutter text-center text-white"
->
-  <h2
-    class="font-headline text-headline-h1-mobile md:text-headline-h1 mb-stack-md"
+<section class="px-5">
+  <div
+    class="max-w-300 mx-auto my-stack-xl bg-secondary rounded-2xl py-stack-xl px-margin-mobile md:px-gutter text-center text-white"
   >
-    {t(lang, "channel.title")}
-  </h2>
-  <p class="text-white/80 mb-stack-lg max-w-xl mx-auto">
-    {t(lang, "channel.description")}
-  </p>
-
-  <div class="flex flex-col items-center gap-4">
-    <Picture
-      src={profileImage}
-      alt={t(lang, "channel.profileAlt")}
-      width={80}
-      height={80}
-      class="w-20 h-20 rounded-full border-2 border-white/30 object-cover"
-      loading="lazy"
-      decoding="async"
-      formats={["avif", "webp"]}
-    />
-
-    <p class="text-white/90 font-bold text-lg">@cinqueterretrip</p>
-
-    <a
-      href="https://www.instagram.com/channel/Aba5NFmxT4bxBIUo/"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="inline-flex items-center justify-center bg-primary text-white px-stack-lg py-3 rounded-lg font-bold hover:bg-primary-container transition-all"
+    <h2
+      class="font-headline text-headline-h1-mobile md:text-headline-h1 mb-stack-md"
     >
-      {t(lang, "channel.joinCta")}
-    </a>
+      {t(lang, "channel.title")}
+    </h2>
+    <p class="text-white/80 mb-stack-lg max-w-xl mx-auto">
+      {t(lang, "channel.description")}
+    </p>
+
+    <div class="flex flex-col items-center gap-4">
+      <Picture
+        src={profileImage}
+        alt={t(lang, "channel.profileAlt")}
+        width={80}
+        height={80}
+        class="w-20 h-20 rounded-full border-2 border-white/30 object-cover"
+        loading="lazy"
+        decoding="async"
+        formats={["avif", "webp"]}
+      />
+
+      <p class="text-white/90 font-bold text-lg">@cinqueterretrip</p>
+
+      <a
+        href="https://www.instagram.com/channel/Aba5NFmxT4bxBIUo/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center bg-primary text-white px-stack-lg py-3 rounded-lg font-bold hover:bg-primary-container transition-all"
+      >
+        {t(lang, "channel.joinCta")}
+      </a>
+    </div>
   </div>
 </section>
