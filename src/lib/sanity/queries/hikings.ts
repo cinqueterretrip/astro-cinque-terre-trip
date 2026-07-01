@@ -25,6 +25,30 @@ export async function fetchHikingCards(lang: Locale) {
   );
 }
 
+export async function fetchHikingCardsHome(lang: Locale) {
+  return sanityClient.fetch(
+    `*[_type == "hiking" && language == $lang] | order(coalesce(order, 9999) asc, _createdAt asc) [0...6] {
+      _id,
+      title,
+      articleType,
+      tagline,
+      "slug": slug.current,
+      heroImage {
+        alt,
+        asset-> {
+          _id,
+          url,
+          metadata {
+            dimensions { width, height },
+            lqip
+          }
+        }
+      }
+    }`,
+    { lang },
+  );
+}
+
 // L'ordinamento e' stabile: prima per `order`, poi per `_createdAt`.
 export async function fetchHikings(lang: Locale) {
   return sanityClient.fetch(
