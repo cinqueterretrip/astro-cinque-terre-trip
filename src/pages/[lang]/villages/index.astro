@@ -57,7 +57,7 @@ const villageSegment = ROUTE_MAP.villages[lang];
       >Along the Ligurian coast</span
     >
     <h1
-      class="font-headline text-5xl font-semibold text-headline-h1-mobile md:text-headline-h1 text-on-surface max-w-2xl mx-auto"
+      class="font-headline font-semibold text-display-lg-mobile md:text-headline-h1 text-on-surface max-w-2xl mx-auto"
     >
       Five Villages That Will Steal Your Heart
     </h1>
@@ -71,7 +71,10 @@ const villageSegment = ROUTE_MAP.villages[lang];
       villages.map((village, index) => {
         const isFlipped = index % 2 !== 0;
         const image = posterImage(village.heroImage);
-        const href = getLocalePath(lang, `/${villageSegment}/${encodeURIComponent(village.slug)}`);
+        const href = getLocalePath(
+          lang,
+          `/${villageSegment}/${encodeURIComponent(village.slug)}`,
+        );
 
         return (
           <section class="flex flex-col md:flex-row items-center gap-stack-lg lg:gap-gutter">
