@@ -1,6 +1,7 @@
 ---
 import Navbar from "@/header/Navbar.astro";
 import LanguageSwitcher from "@/header/LanguageSwitcher.astro";
+import MobileMenu from "@/header/MobileMenu.astro";
 import { getLocalePath, type Locale } from "@/lib/i18n/config";
 import { Picture } from "astro:assets";
 import profileImage from "@/assets/images/profile.jpg";
@@ -55,16 +56,20 @@ const isCurrentPageHome =
     </a>
     <Navbar currentLocale={currentLocale} />
     <div class="flex items-center gap-stack-md">
-      <LanguageSwitcher
+      <!-- Desktop: language switcher -->
+      <div class="hidden md:flex">
+        <LanguageSwitcher
+          currentPath={Astro.url.pathname}
+          currentLocale={currentLocale}
+          alternateLocalePaths={alternateLocalePaths}
+        />
+      </div>
+      <!-- Mobile: hamburger + slide-down panel -->
+      <MobileMenu
         currentPath={Astro.url.pathname}
         currentLocale={currentLocale}
         alternateLocalePaths={alternateLocalePaths}
       />
-      <!-- <button
-        class="bg-primary text-white px-stack-lg py-2 rounded-DEFAULT font-label-sm text-label-sm hover:opacity-90 active:scale-95 transition-all"
-      >
-        Plan Your Trip
-      </button> -->
     </div>
   </div>
 </header>

@@ -1,0 +1,326 @@
+---
+import {
+  LOCALES,
+  LOCALE_LABELS,
+  switchLocalePath,
+  type Locale,
+} from "@/lib/i18n/config";
+
+interface Props {
+  currentPath: string;
+  currentLocale: Locale;
+  alternateLocalePaths?: Partial<Record<Locale, string>>;
+}
+
+const { currentPath, currentLocale, alternateLocalePaths } =
+  Astro.props as Props;
+
+type MenuItem = {
+  href: Record<Locale, string>;
+  labels: Record<Locale, string>;
+};
+
+const menuItems: MenuItem[] = [
+  {
+    href: { it: "/borghi", en: "/en/villages" },
+    labels: { it: "Borghi", en: "Villages" },
+  },
+  {
+    href: { it: "/esperienze", en: "/en/experiences" },
+    labels: { it: "Esperienze", en: "Experiences" },
+  },
+  {
+    href: { it: "/escursioni", en: "/en/hikings" },
+    labels: { it: "Escursioni", en: "Hikings" },
+  },
+  {
+    href: { it: "/spiagge", en: "/en/beaches" },
+    labels: { it: "Spiagge", en: "Beaches" },
+  },
+  {
+    href: { it: "/consigli", en: "/en/tips" },
+    labels: { it: "Consigli", en: "Tips" },
+  },
+];
+
+const a11y: Record<
+  Locale,
+  { open: string; close: string; nav: string; lang: string }
+> = {
+  it: {
+    open: "Apri menu di navigazione",
+    close: "Chiudi menu di navigazione",
+    nav: "Menu principale",
+    lang: "Lingua",
+  },
+  en: {
+    open: "Open navigation menu",
+    close: "Close navigation menu",
+    nav: "Main menu",
+    lang: "Language",
+  },
+};
+---
+
+<!-- Hamburger button — mobile only (hidden on md+) -->
+<div class="md:hidden">
+  <button
+    id="mobileMenuBtn"
+    type="button"
+    aria-expanded="false"
+    aria-controls="mobileMenuPanel"
+    aria-label={a11y[currentLocale].open}
+    data-label-open={a11y[currentLocale].open}
+    data-label-close={a11y[currentLocale].close}
+    class="flex items-center justify-center w-10 h-10 rounded-lg text-secondary hover:bg-surface-container focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 transition-colors duration-200"
+  >
+    <!-- Hamburger icon -->
+    <svg
+      id="iconHamburger"
+      aria-hidden="true"
+      width="22"
+      height="22"
+      viewBox="0 0 22 22"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+    >
+      <line x1="2" y1="5.5" x2="20" y2="5.5"></line>
+      <line x1="2" y1="11" x2="20" y2="11"></line>
+      <line x1="2" y1="16.5" x2="20" y2="16.5"></line>
+    </svg>
+    <!-- Close (X) icon — hidden by default -->
+    <svg
+      id="iconClose"
+      aria-hidden="true"
+      class="hidden"
+      width="22"
+      height="22"
+      viewBox="0 0 22 22"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+    >
+      <line x1="3" y1="3" x2="19" y2="19"></line>
+      <line x1="19" y1="3" x2="3" y2="19"></line>
+    </svg>
+  </button>
+</div>
+
+<!-- Backdrop — sits behind the panel, closes menu on click -->
+<div
+  id="mobileMenuBackdrop"
+  aria-hidden="true"
+  class="md:hidden fixed inset-0 top-20 z-40 bg-black/30 opacity-0 pointer-events-none transition-opacity duration-200"
+>
+</div>
+
+<!-- Slide-down panel -->
+<div
+  id="mobileMenuPanel"
+  role="dialog"
+  aria-modal="true"
+  aria-label={a11y[currentLocale].nav}
+  aria-hidden="true"
+  class="md:hidden fixed inset-x-0 top-20 z-50 bg-surface border-t border-outline-variant shadow-lg opacity-0 -translate-y-2 pointer-events-none transition-all duration-200"
+>
+  <div class="max-w-container-max mx-auto px-margin-mobile py-stack-lg">
+    <!-- Navigation links -->
+    <nav aria-label={a11y[currentLocale].nav}>
+      <ul class="divide-y divide-outline-variant/40" role="list">
+        {
+          menuItems.map((item) => (
+            <li>
+              <a
+                href={item.href[currentLocale]}
+                class="flex items-center py-stack-md font-headline text-lg font-semibold text-on-surface hover:text-primary transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset rounded"
+              >
+                {item.labels[currentLocale]}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <!-- Language switcher -->
+    <div class="mt-stack-lg pt-stack-md border-t border-outline-variant/40">
+      <p
+        id="mobileMenuLangLabel"
+        class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant mb-stack-sm"
+      >
+        {a11y[currentLocale].lang}
+      </p>
+      <div
+        class="flex gap-stack-sm"
+        role="group"
+        aria-labelledby="mobileMenuLangLabel"
+      >
+        {
+          LOCALES.map((locale) => {
+            const href =
+              alternateLocalePaths?.[locale] ??
+              switchLocalePath(currentPath || "", locale);
+            const isActive = locale === currentLocale;
+            return (
+              <a
+                href={href}
+                hreflang={locale}
+                aria-current={isActive ? "page" : undefined}
+                class:list={[
+                  "px-stack-md py-2 rounded-lg text-[13px] font-semibold uppercase tracking-wider transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                  isActive
+                    ? "bg-surface-container text-primary"
+                    : "text-on-surface-variant hover:bg-surface-container hover:text-secondary",
+                ]}
+                style="font-family: 'DM Sans', sans-serif;"
+              >
+                {LOCALE_LABELS[locale]}
+              </a>
+            );
+          })
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  type FocusableElement =
+    | HTMLAnchorElement
+    | HTMLButtonElement
+    | HTMLInputElement
+    | HTMLSelectElement
+    | HTMLTextAreaElement;
+
+  function getFocusableElements(container: HTMLElement): FocusableElement[] {
+    return Array.from(
+      container.querySelectorAll<FocusableElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ),
+    );
+  }
+
+  function setupMobileMenu(): void {
+    const btn = document.getElementById(
+      "mobileMenuBtn",
+    ) as HTMLButtonElement | null;
+    const panel = document.getElementById(
+      "mobileMenuPanel",
+    ) as HTMLDivElement | null;
+    const backdrop = document.getElementById(
+      "mobileMenuBackdrop",
+    ) as HTMLDivElement | null;
+    const iconHamburger = document.getElementById(
+      "iconHamburger",
+    ) as SVGSVGElement | null;
+    const iconClose = document.getElementById(
+      "iconClose",
+    ) as SVGSVGElement | null;
+
+    if (!btn || !panel || !backdrop) return;
+
+    let isOpen = false;
+
+    function openMenu(): void {
+      isOpen = true;
+
+      panel!.classList.remove(
+        "opacity-0",
+        "-translate-y-2",
+        "pointer-events-none",
+      );
+      panel!.classList.add(
+        "opacity-100",
+        "translate-y-0",
+        "pointer-events-auto",
+      );
+      panel!.setAttribute("aria-hidden", "false");
+
+      backdrop!.classList.remove("opacity-0", "pointer-events-none");
+      backdrop!.classList.add("opacity-100", "pointer-events-auto");
+
+      btn!.setAttribute("aria-expanded", "true");
+      btn!.setAttribute("aria-label", btn!.dataset.labelClose ?? "");
+
+      iconHamburger?.classList.add("hidden");
+      iconClose?.classList.remove("hidden");
+
+      document.body.style.overflow = "hidden";
+
+      // Move focus to first focusable element inside the panel
+      const focusable = getFocusableElements(panel!);
+      focusable[0]?.focus();
+    }
+
+    function closeMenu(): void {
+      isOpen = false;
+
+      panel!.classList.remove(
+        "opacity-100",
+        "translate-y-0",
+        "pointer-events-auto",
+      );
+      panel!.classList.add(
+        "opacity-0",
+        "-translate-y-2",
+        "pointer-events-none",
+      );
+      panel!.setAttribute("aria-hidden", "true");
+
+      backdrop!.classList.remove("opacity-100", "pointer-events-auto");
+      backdrop!.classList.add("opacity-0", "pointer-events-none");
+
+      btn!.setAttribute("aria-expanded", "false");
+      btn!.setAttribute("aria-label", btn!.dataset.labelOpen ?? "");
+
+      iconHamburger?.classList.remove("hidden");
+      iconClose?.classList.add("hidden");
+
+      document.body.style.overflow = "";
+
+      // Return focus to the trigger
+      btn!.focus();
+    }
+
+    // Focus trap — cycles Tab/Shift+Tab within the panel
+    panel.addEventListener("keydown", (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      const focusable = getFocusableElements(panel);
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    });
+
+    btn.addEventListener("click", () => {
+      isOpen ? closeMenu() : openMenu();
+    });
+
+    backdrop.addEventListener("click", closeMenu);
+
+    document.addEventListener("keydown", (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) closeMenu();
+    });
+
+    // Close when any nav link inside the panel is clicked
+    panel.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", closeMenu);
+    });
+  }
+
+  setupMobileMenu();
+  document.addEventListener("astro:page-load", setupMobileMenu);
+</script>
