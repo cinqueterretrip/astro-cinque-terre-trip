@@ -1,0 +1,103 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n/config";
+import { posterImage } from "@/lib/sanity/image";
+import { fetchBeachesCards } from "@/lib/sanity/queries/beaches";
+import { PortableText } from "astro-portabletext";
+
+type Image = {
+  alt?: string;
+  asset: {
+    _id: string;
+    url: string;
+    metadata: {
+      dimensions: { width: number; height: number };
+      lqip?: string;
+    };
+  };
+};
+
+interface Beach {
+  _id: string;
+  language?: Locale;
+  title: string;
+  subtitle?: string;
+  text?: [];
+  posterImage: Image;
+}
+
+const lang = DEFAULT_LOCALE;
+const beaches: Beach[] = await fetchBeachesCards(lang);
+---
+
+<BaseLayout
+  title="Spiagge delle Cinque Terre: cale, scogli e mare limpido | Cinque Terre Trip"
+  description="Scopri le spiagge piu belle delle Cinque Terre, tra calette nascoste, litorali di ciottoli e punti perfetti per nuotare e rilassarti lungo la costa ligure."
+  locale={lang}
+>
+  <!-- Header Section -->
+  <section
+    class="pt-20 pb-stack-xl px-margin-mobile max-w-container-max mx-auto text-center"
+  >
+    <span
+      class="font-label-sm text-label-sm uppercase tracking-widest text-primary mb-stack-sm block"
+      >Tra calette, scogli e acqua trasparente</span
+    >
+    <h1
+      class="font-headline text-5xl font-semibold text-headline-h1-mobile md:text-headline-h1 text-on-surface max-w-2xl mx-auto"
+    >
+      Le spiagge delle Cinque Terre da vivere
+    </h1>
+    <div class="w-16 h-px bg-outline-variant mx-auto mt-stack-lg"></div>
+  </section>
+  <main
+    class="max-w-container-max mx-auto px-margin-mobile pb-stack-xl space-y-24 md:space-y-40"
+    id="main-content"
+  >
+    {
+      beaches.map((beach, index) => {
+        const isFlipped = index % 2 !== 0;
+        const image = posterImage(beach.posterImage);
+
+        return (
+          <section class="flex flex-col md:flex-row items-center gap-stack-lg lg:gap-gutter">
+            <div
+              class={`w-full md:w-3/5 order-1 ${isFlipped ? "md:order-2" : "md:order-1"}`}
+            >
+              <div class="editorial-image-mask overflow-hidden rounded-lg aspect-4/3 md:aspect-video relative group">
+                <img
+                  class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  src={image.src}
+                  srcset={image.srcSet}
+                  sizes={image.sizes}
+                  alt={beach.posterImage.alt ?? beach.title}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                />
+                <div class="absolute inset-0 bg-black/5 pointer-events-none" />
+              </div>
+            </div>
+
+            <div
+              class={`w-full md:w-2/5 order-2 md:px-stack-md text-center ${isFlipped ? "md:order-1 md:text-right" : "md:order-2 md:text-left"}`}
+            >
+              {beach.subtitle && (
+                <span class="font-label-sm text-label-sm text-secondary uppercase mb-stack-xs block">
+                  {beach.subtitle}
+                </span>
+              )}
+              <h2 class="font-headline text-headline-h2 text-on-surface mb-stack-sm">
+                {beach.title}
+              </h2>
+              {beach.text && (
+                <div class="font-body-lg text-body-lg text-on-surface-variant">
+                  <PortableText value={beach.text} />
+                </div>
+              )}
+            </div>
+          </section>
+        );
+      })
+    }
+  </main>
+</BaseLayout>
