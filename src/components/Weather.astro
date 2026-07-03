@@ -1,79 +1,417 @@
 ---
-import { LightMode, PartlyCloudyDay, Rainy } from "@/icons";
+import { LOCATIONS, DEFAULT_LOCATION_ID } from "@/lib/weather/locations";
+import type { Locale } from "@/lib/i18n/config";
+import type { WeatherTranslations } from "@/lib/weather/types";
+
+interface Props {
+  locale?: Locale;
+}
+
+const locale = ((Astro.props as Props).locale ??
+  Astro.currentLocale ??
+  "it") as Locale;
+
+const TRANSLATIONS: Record<Locale, WeatherTranslations> = {
+  it: {
+    liveFrom: "Meteo in diretta",
+    selectLocation: "Seleziona località",
+    today: "Oggi",
+    tomorrow: "Domani",
+    loading: "Caricamento...",
+    error: "Impossibile caricare le previsioni. Controlla la connessione.",
+    retry: "Riprova",
+    locationSuffix: "Italia",
+    sunny: "Soleggiato",
+    mainlySunny: "Prevalentemente soleggiato",
+    partlyCloudy: "Parzialmente nuvoloso",
+    overcast: "Nuvoloso",
+    foggy: "Nebbia",
+    drizzle: "Pioggerella",
+    rain: "Pioggia",
+    snow: "Neve",
+    thunderstorm: "Temporale",
+    days: [
+      "Domenica",
+      "Lunedì",
+      "Martedì",
+      "Mercoledì",
+      "Giovedì",
+      "Venerdì",
+      "Sabato",
+    ],
+  },
+  en: {
+    liveFrom: "Live weather",
+    selectLocation: "Select location",
+    today: "Today",
+    tomorrow: "Tomorrow",
+    loading: "Loading...",
+    error: "Unable to load the weather forecast. Check your connection.",
+    retry: "Try again",
+    locationSuffix: "Italy",
+    sunny: "Sunny",
+    mainlySunny: "Mainly sunny",
+    partlyCloudy: "Partly cloudy",
+    overcast: "Overcast",
+    foggy: "Foggy",
+    drizzle: "Drizzle",
+    rain: "Rain",
+    snow: "Snow",
+    thunderstorm: "Thunderstorm",
+    days: [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ],
+  },
+};
+
+const t = TRANSLATIONS[locale];
+const defaultLocation =
+  LOCATIONS.find((l) => l.id === DEFAULT_LOCATION_ID) ?? LOCATIONS[0];
 ---
 
-<section class="bg-surface-container-low py-stack-xl">
+<section
+  class="bg-surface-container-low py-stack-xl relative"
+  id="weather-widget"
+  data-locations={JSON.stringify(LOCATIONS)}
+  data-default-location={DEFAULT_LOCATION_ID}
+  data-translations={JSON.stringify(t)}
+  aria-label={t.liveFrom}
+>
   <div class="max-w-container-max mx-auto px-margin-mobile md:px-gutter">
+    <!-- Error state (hidden until a fetch fails) -->
     <div
-      class="flex flex-col md:flex-row items-center justify-between gap-stack-xl"
+      id="weather-error"
+      role="alert"
+      aria-live="assertive"
+      class="hidden text-center py-stack-xl"
     >
-      <!-- Temperature Display -->
+      <p
+        id="weather-error-text"
+        class="text-on-surface-variant font-body-md mb-stack-md"
+      >
+        {t.error}
+      </p>
+      <button
+        id="weather-retry"
+        type="button"
+        class="px-stack-lg py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-sm text-label-sm hover:bg-surface-container focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors duration-200"
+      >
+        {t.retry}
+      </button>
+    </div>
+
+    <!-- Main content -->
+    <div
+      id="weather-content"
+      class="flex flex-col md:flex-row items-center justify-between gap-stack-xl"
+      aria-live="polite"
+      aria-atomic="true"
+    >
+      <!-- Left: current conditions -->
       <div class="flex flex-col items-center md:items-start">
-        <span class="text-tertiary font-label-sm uppercase tracking-widest mb-2"
-          >Live from the Riviera</span
+        <span
+          class="text-tertiary font-label-sm uppercase tracking-widest mb-2"
+          aria-hidden="true">{t.liveFrom}</span
         >
+
+        <!-- Location select -->
+        <div class="relative inline-flex items-center mb-2">
+          <label for="weather-select" class="sr-only">{t.selectLocation}</label>
+          <select
+            id="weather-select"
+            class="appearance-none font-body-md text-on-surface-variant bg-transparent border-none pr-5 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded transition-opacity duration-200"
+            style="font-family: 'DM Sans', sans-serif;"
+          >
+            {
+              LOCATIONS.map((loc) => (
+                <option
+                  value={loc.id}
+                  selected={loc.id === DEFAULT_LOCATION_ID}
+                >
+                  {loc.name}, {t.locationSuffix}
+                </option>
+              ))
+            }
+          </select>
+          <!-- Chevron indicator -->
+          <svg
+            class="pointer-events-none absolute right-0 text-on-surface-variant"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="m6 9 6 6 6-6"></path>
+          </svg>
+        </div>
+
+        <!-- Current temperature -->
         <div class="flex items-start">
           <span
+            id="wc-temp"
             class="font-headline text-display-lg-mobile md:text-display-lg text-on-surface"
-            >24</span
+            >--</span
           >
           <span class="font-headline text-headline-h1 text-on-surface mt-2"
             >°C</span
           >
         </div>
-        <p class="text-on-surface-variant font-body-md">Manarola, Italy</p>
+
+        <!-- Current icon + description -->
+        <div class="flex items-center gap-stack-xs mt-stack-sm">
+          <span id="wc-icon" class="text-tertiary" aria-hidden="true"></span>
+          <span id="wc-description" class="text-sm text-on-surface-variant"
+            >--</span
+          >
+        </div>
       </div>
-      <!-- Forecast Cards -->
+
+      <!-- Right: 3-day forecast cards (today, tomorrow, day+2) -->
       <div class="flex-1 w-full">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-stack-lg">
-          <!-- Today -->
-          <div
-            class="bg-white/50 backdrop-blur-sm p-stack-lg rounded-xl border border-outline-variant/30 flex flex-col items-center text-center"
-          >
-            <span class="font-bold text-on-surface-variant mb-stack-sm"
-              >Today</span
-            >
-            <LightMode className="text-tertiary mb-stack-sm" dimension="40px" />
-            <div class="flex gap-2 font-bold mb-1">
-              <span class="text-on-surface">26°</span>
-              <span class="text-on-surface-variant/60">19°</span>
-            </div>
-            <span class="text-sm text-on-surface-variant">Sunny</span>
-          </div>
-          <!-- Tomorrow -->
-          <div
-            class="bg-white/50 backdrop-blur-sm p-stack-lg rounded-xl border border-outline-variant/30 flex flex-col items-center text-center"
-          >
-            <span class="font-bold text-on-surface-variant mb-stack-sm"
-              >Tomorrow</span
-            >
-            <PartlyCloudyDay
-              className="text-tertiary mb-stack-sm"
-              dimension="40px"
-            />
-            <div class="flex gap-2 font-bold mb-1">
-              <span class="text-on-surface">24°</span>
-              <span class="text-on-surface-variant/60">18°</span>
-            </div>
-            <span class="text-sm text-on-surface-variant">Partly Cloudy</span>
-          </div>
-          <!-- Next Day -->
-          <div
-            class="bg-white/50 backdrop-blur-sm p-stack-lg rounded-xl border border-outline-variant/30 flex flex-col items-center text-center"
-          >
-            <span class="font-bold text-on-surface-variant mb-stack-sm"
-              >Thursday</span
-            >
-            <Rainy className="text-tertiary mb-stack-sm" dimension="40px" />
-            <div class="flex gap-2 font-bold mb-1">
-              <span class="text-on-surface">25°</span>
-              <span class="text-on-surface-variant/60">17°</span>
-            </div>
-            <span class="text-sm text-on-surface-variant">Clear Skies</span>
-          </div>
+          {
+            [0, 1, 2].map((i) => (
+              <div class="bg-white/50 backdrop-blur-sm p-stack-lg rounded-xl border border-outline-variant/30 flex flex-col items-center text-center">
+                <span
+                  id={`wf-day-${i}`}
+                  class="font-bold text-on-surface-variant mb-stack-sm"
+                >
+                  --
+                </span>
+                <span
+                  id={`wf-icon-${i}`}
+                  class="text-tertiary mb-stack-sm"
+                  aria-hidden="true"
+                />
+                <div class="flex gap-2 font-bold mb-1">
+                  <span id={`wf-max-${i}`} class="text-on-surface">
+                    --°
+                  </span>
+                  <span id={`wf-min-${i}`} class="text-on-surface-variant/60">
+                    --°
+                  </span>
+                </div>
+                <span
+                  id={`wf-desc-${i}`}
+                  class="text-sm text-on-surface-variant"
+                >
+                  --
+                </span>
+              </div>
+            ))
+          }
         </div>
       </div>
     </div>
+
+    <!-- Loading overlay (absolute, covers section content) -->
+    <div
+      id="weather-loading"
+      aria-hidden="true"
+      class="absolute inset-0 flex items-center justify-center bg-surface-container-low/80 z-10 opacity-0 pointer-events-none transition-opacity duration-200"
+    >
+      <div
+        class="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"
+        role="status"
+      >
+        <span class="sr-only">{t.loading}</span>
+      </div>
+    </div>
   </div>
-  <!-- TODO: Aggiungere sezione booking, da ricevere da parte di Jhon Ed. -->
+
+  <!-- Screen-reader live announcement -->
+  <p id="weather-sr" class="sr-only" aria-live="polite" aria-atomic="true"></p>
 </section>
+
+<script>
+  import { fetchWeather } from "@/lib/weather/api";
+  import { getWeatherInfo, createWeatherSvg } from "@/lib/weather/weatherCodes";
+  import type {
+    Location,
+    WeatherTranslations,
+    WeatherLabels,
+    WeatherLabelKey,
+  } from "@/lib/weather/types";
+
+  // -------------------------------------------------------------------------
+  // Helpers
+  // -------------------------------------------------------------------------
+
+  function getDayLabel(
+    index: number,
+    dateStr: string,
+    t: WeatherTranslations,
+  ): string {
+    if (index === 0) return t.today;
+    if (index === 1) return t.tomorrow;
+    // Parse at noon to avoid daylight-saving edge cases
+    const d = new Date(`${dateStr}T12:00:00`);
+    return t.days[d.getDay()] ?? dateStr;
+  }
+
+  function setIcon(container: HTMLElement, svgPath: string, size = "40"): void {
+    container.innerHTML = "";
+    container.appendChild(createWeatherSvg(svgPath, size));
+  }
+
+  // -------------------------------------------------------------------------
+  // Widget initialisation
+  // -------------------------------------------------------------------------
+
+  function setupWeatherWidget(): void {
+    const widget = document.getElementById("weather-widget");
+    if (!widget) return; // Not on this page
+
+    // --- Parse server-rendered config from data attributes ---
+    let locations: Location[] = [];
+    let translations: WeatherTranslations | null = null;
+
+    try {
+      locations = JSON.parse(widget.dataset.locations ?? "[]") as Location[];
+      translations = JSON.parse(
+        widget.dataset.translations ?? "{}",
+      ) as WeatherTranslations;
+    } catch {
+      console.error("[Weather] Failed to parse widget config.");
+      return;
+    }
+
+    if (!translations || locations.length === 0) return;
+
+    const t = translations;
+    const defaultId = widget.dataset.defaultLocation ?? locations[0].id;
+
+    // --- DOM refs ---
+    const selectEl = document.getElementById(
+      "weather-select",
+    ) as HTMLSelectElement | null;
+    const tempEl = document.getElementById("wc-temp");
+    const iconEl = document.getElementById("wc-icon");
+    const descEl = document.getElementById("wc-description");
+    const contentEl = document.getElementById("weather-content");
+    const loadingEl = document.getElementById("weather-loading");
+    const errorEl = document.getElementById("weather-error");
+    const errorTextEl = document.getElementById("weather-error-text");
+    const retryBtn = document.getElementById("weather-retry");
+    const srEl = document.getElementById("weather-sr");
+
+    if (!selectEl || !tempEl || !iconEl || !descEl || !contentEl) return;
+
+    // Build weather labels object (type-safe extraction)
+    const LABEL_KEYS: WeatherLabelKey[] = [
+      "sunny",
+      "mainlySunny",
+      "partlyCloudy",
+      "overcast",
+      "foggy",
+      "drizzle",
+      "rain",
+      "snow",
+      "thunderstorm",
+    ];
+    const labels = Object.fromEntries(
+      LABEL_KEYS.map((k) => [k, t[k]]),
+    ) as WeatherLabels;
+
+    // --- State helpers ---
+    function showLoading(visible: boolean): void {
+      selectEl!.disabled = visible;
+      if (loadingEl) {
+        loadingEl.classList.toggle("opacity-0", !visible);
+        loadingEl.classList.toggle("pointer-events-none", !visible);
+        loadingEl.setAttribute("aria-hidden", String(!visible));
+      }
+    }
+
+    function showError(message: string): void {
+      if (errorTextEl) errorTextEl.textContent = message;
+      if (errorEl) errorEl.classList.remove("hidden");
+      if (contentEl) contentEl.classList.add("hidden");
+    }
+
+    function clearError(): void {
+      if (errorEl) errorEl.classList.add("hidden");
+      if (contentEl) contentEl.classList.remove("hidden");
+    }
+
+    // --- Render ---
+    function renderWeather(location: Location): void {
+      showLoading(true);
+      clearError();
+
+      fetchWeather(location)
+        .then((data) => {
+          const currentInfo = getWeatherInfo(data.current.weatherCode, labels);
+
+          // Current conditions
+          tempEl!.textContent = String(data.current.temperature);
+          if (iconEl) setIcon(iconEl, currentInfo.svgPath, "40");
+          if (descEl) descEl.textContent = currentInfo.label;
+
+          // Forecast cards
+          data.daily.forEach((day, i) => {
+            const dayLabel = document.getElementById(`wf-day-${i}`);
+            const dayIcon = document.getElementById(`wf-icon-${i}`);
+            const dayMax = document.getElementById(`wf-max-${i}`);
+            const dayMin = document.getElementById(`wf-min-${i}`);
+            const dayDesc = document.getElementById(`wf-desc-${i}`);
+
+            const info = getWeatherInfo(day.weatherCode, labels);
+
+            if (dayLabel) dayLabel.textContent = getDayLabel(i, day.date, t);
+            if (dayIcon) setIcon(dayIcon, info.svgPath, "40");
+            if (dayMax) dayMax.textContent = `${day.maxTemp}°`;
+            if (dayMin) dayMin.textContent = `${day.minTemp}°`;
+            if (dayDesc) dayDesc.textContent = info.label;
+          });
+
+          // Screen-reader announcement
+          if (srEl) {
+            srEl.textContent = `${location.name}: ${data.current.temperature}°C, ${currentInfo.label}.`;
+          }
+        })
+        .catch((err: unknown) => {
+          const message = err instanceof Error ? err.message : t.error;
+          console.error("[Weather]", message);
+          showError(t.error);
+        })
+        .finally(() => {
+          showLoading(false);
+        });
+    }
+
+    // --- Location change ---
+    selectEl.addEventListener("change", () => {
+      const selected = locations.find((l) => l.id === selectEl.value);
+      if (selected) renderWeather(selected);
+    });
+
+    // --- Retry button ---
+    retryBtn?.addEventListener("click", () => {
+      const selected =
+        locations.find((l) => l.id === selectEl.value) ??
+        locations.find((l) => l.id === defaultId) ??
+        locations[0];
+      renderWeather(selected);
+    });
+
+    // --- Initial load ---
+    const initial = locations.find((l) => l.id === defaultId) ?? locations[0];
+    renderWeather(initial);
+  }
+
+  // Run on first load and on every Astro View Transition navigation
+  setupWeatherWidget();
+  document.addEventListener("astro:page-load", setupWeatherWidget);
+</script>
