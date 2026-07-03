@@ -13,7 +13,6 @@ type MenuLink = {
   href: Record<Locale, string>;
   labelKey:
     | "footer.villages"
-    | "footer.experiences"
     | "footer.beaches"
     | "footer.hiking"
     | "footer.tips";
@@ -26,13 +25,6 @@ const discoverLinks: MenuLink[] = [
       en: "/en/villages",
     },
     labelKey: "footer.villages",
-  },
-  {
-    href: {
-      it: "/esperienze",
-      en: "/en/experiences",
-    },
-    labelKey: "footer.experiences",
   },
   {
     href: {
