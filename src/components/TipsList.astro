@@ -4,6 +4,7 @@ import { getLocalePath } from "@/lib/i18n/config";
 import { ROUTE_MAP } from "@/lib/i18n/routes";
 import { cardImage } from "@/lib/sanity/image";
 import { fetchTipCardsHome } from "@/lib/sanity/queries/tips";
+import { ChevronRight } from "@/icons";
 import { t } from "@/lib/i18n/ui";
 
 interface Props {
@@ -69,6 +70,9 @@ function getTipsHref(locale: Locale, slug: string) {
               <h3 class="font-headline text-headline-h3 mt-2 mb-4 group-hover:underline">
                 {tip.title}
               </h3>
+              <span class="text-secondary font-bold inline-flex items-center gap-2">
+                {t(lang, "villages.cta")} <ChevronRight dimension="18px" />
+              </span>
             </a>
           );
         })}

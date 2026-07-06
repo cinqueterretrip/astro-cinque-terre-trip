@@ -50,28 +50,27 @@ function getVillageHref(locale: Locale, slug: string) {
 
         return (
           <article class="group">
-            <div class="aspect-3/4 rounded-lg mb-stack-sm overflow-hidden bg-surface-container">
-              <img
-                alt={village.heroImage.alt || village.title}
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                src={image.src}
-                srcset={image.srcSet}
-                sizes={image.sizes}
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-            <h3 class="font-headline-h3 text-headline-h3 mb-stack-xs group-hover:text-primary transition-colors">
-              {village.title}
-            </h3>
-            <p class="text-on-surface-variant text-sm mb-stack-sm">
-              {village.tagline}
-            </p>
-            <a
-              class="text-primary font-bold text-label-sm inline-flex items-center gap-2 group"
-              href={href}
-            >
-              {t(lang, "villages.cta")} <ArrowForward dimension="16px" />
+            <a href={href}>
+              <div class="aspect-3/4 rounded-lg mb-stack-sm overflow-hidden bg-surface-container">
+                <img
+                  alt={village.heroImage.alt || village.title}
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  src={image.src}
+                  srcset={image.srcSet}
+                  sizes={image.sizes}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <h3 class="font-headline-h3 text-headline-h3 mb-stack-xs group-hover:text-primary transition-colors">
+                {village.title}
+              </h3>
+              <p class="text-on-surface-variant text-sm mb-stack-sm">
+                {village.tagline}
+              </p>
+              <span class="text-primary font-bold text-label-sm inline-flex items-center gap-2 group">
+                {t(lang, "villages.cta")} <ArrowForward dimension="16px" />
+              </span>
             </a>
           </article>
         );
