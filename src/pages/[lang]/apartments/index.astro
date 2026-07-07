@@ -1,0 +1,51 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import type { Locale } from "@/lib/i18n/config";
+import { getLocalePaths } from "@/lib/i18n/paths";
+import { fetchApartmentsCards } from "@/lib/sanity/queries/apartments";
+import AccommodationList from "@/models/AccommodationList.astro";
+
+type Image = {
+  alt?: string;
+  asset: {
+    _id: string;
+    url: string;
+    metadata: {
+      dimensions: { width: number; height: number };
+      lqip?: string;
+    };
+  };
+};
+
+interface Apartment {
+  _id: string;
+  language?: Locale;
+  title: string;
+  accommodationVillage?: { _type: string; village: string };
+  text?: [];
+  rating?: number;
+  linkBooking?: string;
+  posterImage: Image;
+}
+
+export function getStaticPaths() {
+  return getLocalePaths();
+}
+
+const lang = (Astro.currentLocale ?? "en") as Locale;
+const apartments: Apartment[] = await fetchApartmentsCards(lang);
+---
+
+<BaseLayout
+  title="Cinque Terre Apartments: Best Places to Stay"
+  description="Find the best apartments in Cinque Terre. Browse hand-picked accommodations in Monterosso, Vernazza, Corniglia, Manarola, and Riomaggiore for an unforgettable stay on the Italian Riviera."
+  locale={lang}
+>
+  <AccommodationList
+    lang={lang}
+    accommodations={apartments}
+    title="Where to Stay"
+    subtitle="Our Curated Apartment Selection"
+    text="Discover the best apartments in Cinque Terre — carefully selected accommodations in the heart of Monterosso, Vernazza, Corniglia, Manarola, and Riomaggiore, so you can experience the Italian Riviera like a local."
+  />
+</BaseLayout>

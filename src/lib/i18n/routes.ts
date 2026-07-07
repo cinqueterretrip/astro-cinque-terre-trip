@@ -17,4 +17,8 @@ export const ROUTE_MAP: Record<string, Record<Locale, string>> = {
     it: "spiagge",
     en: "beaches",
   },
+  apartments: {
+    it: "appartamenti",
+    en: "apartments",
+  },
 };
