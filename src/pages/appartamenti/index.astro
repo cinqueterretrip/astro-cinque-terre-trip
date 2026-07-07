@@ -1,0 +1,48 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n/config";
+import { fetchApartmentsCards } from "@/lib/sanity/queries/apartments";
+import AccommodationList from "@/models/AccommodationList.astro";
+
+type Image = {
+  alt?: string;
+  asset: {
+    _id: string;
+    url: string;
+    metadata: {
+      dimensions: { width: number; height: number };
+      lqip?: string;
+    };
+  };
+};
+
+interface Apartment {
+  _id: string;
+  language?: Locale;
+  title: string;
+  accommodationVillage?: { _type: string; village: string };
+  text?: [];
+  rating?: number;
+  linkBooking?: string;
+  posterImage: Image;
+}
+
+const lang = DEFAULT_LOCALE;
+const apartments: Apartment[] = await fetchApartmentsCards(lang);
+
+console.log("Apartments data fetched:", apartments);
+---
+
+<BaseLayout
+  title="Appartamenti nelle Cinque Terre: i migliori alloggi dove soggiornare"
+  description="Scopri i migliori appartamenti e alloggi nelle Cinque Terre, dalle residenze storiche ai boutique nel cuore dei borghi liguri, per un soggiorno indimenticabile."
+  locale={lang}
+>
+  <AccommodationList
+    lang={lang}
+    accommodations={apartments}
+    title="Dove Alloggiare"
+    subtitle="La Nostra Selezione di Appartamenti"
+    text="Scopri i migliori appartamenti nelle Cinque Terre: sistemazioni curate nei borghi di Monterosso, Vernazza, Corniglia, Manarola e Riomaggiore, per vivere la riviera ligure come un locale."
+  />
+</BaseLayout>

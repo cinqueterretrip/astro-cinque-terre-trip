@@ -1,0 +1,170 @@
+---
+import type { Locale } from "@/lib/i18n/config";
+import { posterImage } from "@/lib/sanity/image";
+import { PortableText } from "astro-portabletext";
+import { ArrowForward } from "@/icons";
+
+type Image = {
+  alt?: string;
+  asset: {
+    _id: string;
+    url: string;
+    metadata: {
+      dimensions: { width: number; height: number };
+      lqip?: string;
+    };
+  };
+};
+
+interface Accomodation {
+  _id: string;
+  language?: Locale;
+  title: string;
+  accommodationVillage?: { _type: string; village: string };
+  text?: [];
+  rating?: number;
+  linkBooking?: string;
+  posterImage: Image;
+}
+
+interface Props {
+  accommodations: Accomodation[];
+  lang: Locale;
+  title: string;
+  subtitle: string;
+  text: string;
+}
+
+const { accommodations, lang, title, subtitle, text } = Astro.props as Props;
+
+const translations = {
+  "booking.cta": {
+    en: "Book Now",
+    it: "Prenota Ora",
+  },
+  "filter.caption": {
+    en: "Filter by Village:",
+    it: "Filtra per Borgo:",
+  },
+  "filter.all": {
+    en: "All",
+    it: "Tutti",
+  },
+};
+---
+
+<main class="pt-32 pb-stack-xl">
+  <!-- Hero Intro Section -->
+  <section
+    class="max-w-container-max mx-auto px-margin-mobile lg:px-stack-xl mb-stack-xl"
+  >
+    <div class="max-w-2xl">
+      <p
+        class="font-label-sm text-label-sm text-primary uppercase tracking-widest mb-stack-sm"
+      >
+        {subtitle}
+      </p>
+      <h1
+        class="font-headline md:font-headline-h1 text-headline-h1-mobile md:text-headline-h1 mb-stack-md"
+      >
+        {title}
+      </h1>
+      <p class="font-body-lg text-body-lg text-on-surface-variant">
+        {text}
+      </p>
+    </div>
+  </section>
+  <section
+    class="max-w-container-max mx-auto px-margin-mobile lg:px-stack-xl mb-stack-xl"
+  >
+    <div
+      class="flex flex-wrap items-center gap-stack-md border-b border-outline-variant/30 pb-stack-md"
+    >
+      <span
+        class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mr-stack-sm"
+        >{translations["filter.caption"][lang]}</span
+      >
+      <a
+        class="font-body-md text-body-md text-primary font-bold hover:underline"
+        href="#">{translations["filter.all"][lang]}</a
+      >
+      <a
+        class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"
+        href="#">Riomaggiore</a
+      >
+      <a
+        class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"
+        href="#">Manarola</a
+      >
+      <a
+        class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"
+        href="#">Corniglia</a
+      >
+      <a
+        class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"
+        href="#">Vernazza</a
+      >
+      <a
+        class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"
+        href="#">Monterosso</a
+      >
+    </div>
+  </section>
+  <!-- Zig-Zag Accommodation List -->
+  <section
+    class="max-w-container-max mx-auto px-margin-mobile lg:px-stack-xl space-y-stack-xl lg:space-y-32"
+  >
+    {
+      accommodations.map((accommodation, index) => {
+        const isEven = index % 2 === 0;
+        const accommodationImage = posterImage(accommodation.posterImage);
+        const accommodationText = Array.isArray(accommodation.text)
+          ? accommodation.text
+          : [];
+        return (
+          <div
+            class={`flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"} items-center gap-gutter lg:gap-stack-xl group`}
+          >
+            <div class="w-full md:w-[42%] overflow-hidden rounded-xl editorial-shadow">
+              <img
+                alt={accommodation.posterImage.alt}
+                class="w-full aspect-square object-cover transform group-hover:scale-105 transition-transform duration-700"
+                src={accommodationImage.src}
+                srcset={accommodationImage.srcSet}
+                sizes={accommodationImage.sizes}
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div class="w-full md:w-[58%] flex flex-col items-start space-y-stack-md md:pl-12">
+              <div class="flex items-center gap-stack-sm">
+                {accommodation.rating && (
+                  <span class="bg-primary text-on-primary px-4 py-1.5 rounded-full font-bold text-body-md tracking-widest">
+                    {accommodation.rating}
+                  </span>
+                )}
+                <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">
+                  {accommodation.accommodationVillage?.village}
+                </span>
+              </div>
+              <h2 class="font-headline text-headline-h2">
+                {accommodation.title}
+              </h2>
+              <p class="font-body-md text-body-md text-on-surface-variant max-w-md">
+                <PortableText value={accommodationText} />
+              </p>
+              <a
+                class="font-body-md text-body-md font-bold text-primary hover:underline flex items-center gap-stack-xs transition-all"
+                href={accommodation.linkBooking}
+                target="_blank"
+              >
+                {translations["booking.cta"][lang]}{" "}
+                <ArrowForward dimension="16px" />
+              </a>
+            </div>
+          </div>
+        );
+      })
+    }
+  </section>
+</main>
