@@ -37,6 +37,27 @@ interface Props {
 
 const { accommodations, lang, title, subtitle, text } = Astro.props as Props;
 
+const VILLAGE_ORDER = [
+  "riomaggiore",
+  "manarola",
+  "corniglia",
+  "vernazza",
+  "monterosso",
+];
+
+const sortedAccommodations = [...accommodations].sort((a, b) => {
+  const villageA = VILLAGE_ORDER.indexOf(
+    a.accommodationVillage?.village?.toLowerCase() ?? "",
+  );
+  const villageB = VILLAGE_ORDER.indexOf(
+    b.accommodationVillage?.village?.toLowerCase() ?? "",
+  );
+  const villageDiff =
+    (villageA === -1 ? 99 : villageA) - (villageB === -1 ? 99 : villageB);
+  if (villageDiff !== 0) return villageDiff;
+  return (b.rating ?? 0) - (a.rating ?? 0);
+});
+
 const translations = {
   "booking.cta": {
     en: "Book Now",
@@ -115,7 +136,7 @@ const translations = {
     class="max-w-container-max mx-auto px-margin-mobile lg:px-stack-xl space-y-stack-xl lg:space-y-32"
   >
     {
-      accommodations.map((accommodation, index) => {
+      sortedAccommodations.map((accommodation, index) => {
         const isEven = index % 2 === 0;
         const accommodationImage = posterImage(accommodation.posterImage);
         const accommodationText = Array.isArray(accommodation.text)
@@ -124,6 +145,7 @@ const translations = {
         return (
           <div
             class={`flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"} items-center gap-gutter lg:gap-stack-xl group`}
+            data-category={accommodation.accommodationVillage?.village}
           >
             <div class="w-full md:w-[42%] overflow-hidden rounded-xl editorial-shadow">
               <img
