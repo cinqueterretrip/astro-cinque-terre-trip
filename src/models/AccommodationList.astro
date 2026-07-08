@@ -100,34 +100,48 @@ const translations = {
   >
     <div
       class="flex flex-wrap items-center gap-stack-md border-b border-outline-variant/30 pb-stack-md"
+      role="group"
+      aria-label={translations["filter.caption"][lang]}
     >
       <span
         class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mr-stack-sm"
-        >{translations["filter.caption"][lang]}</span
+        aria-hidden="true">{translations["filter.caption"][lang]}</span
       >
-      <a
-        class="font-body-md text-body-md text-primary font-bold hover:underline"
-        href="#">{translations["filter.all"][lang]}</a
+      <button
+        type="button"
+        class="font-body-md text-body-md font-bold text-primary hover:underline cursor-pointer"
+        data-filter="all"
+        aria-pressed="true">{translations["filter.all"][lang]}</button
       >
-      <a
-        class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"
-        href="#">Riomaggiore</a
+      <button
+        type="button"
+        class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+        data-filter="riomaggiore"
+        aria-pressed="false">Riomaggiore</button
       >
-      <a
-        class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"
-        href="#">Manarola</a
+      <button
+        type="button"
+        class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+        data-filter="manarola"
+        aria-pressed="false">Manarola</button
       >
-      <a
-        class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"
-        href="#">Corniglia</a
+      <button
+        type="button"
+        class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+        data-filter="corniglia"
+        aria-pressed="false">Corniglia</button
       >
-      <a
-        class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"
-        href="#">Vernazza</a
+      <button
+        type="button"
+        class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+        data-filter="vernazza"
+        aria-pressed="false">Vernazza</button
       >
-      <a
-        class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"
-        href="#">Monterosso</a
+      <button
+        type="button"
+        class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+        data-filter="monterosso"
+        aria-pressed="false">Monterosso</button
       >
     </div>
   </section>
@@ -190,3 +204,37 @@ const translations = {
     }
   </section>
 </main>
+
+<script>
+  const filterButtons =
+    document.querySelectorAll<HTMLButtonElement>("[data-filter]");
+  const accommodationItems =
+    document.querySelectorAll<HTMLElement>("[data-category]");
+
+  function setFilter(activeFilter: string): void {
+    filterButtons.forEach((btn) => {
+      const isActive = btn.dataset.filter === activeFilter;
+      btn.setAttribute("aria-pressed", String(isActive));
+      if (isActive) {
+        btn.classList.remove("text-on-surface-variant");
+        btn.classList.add("text-primary", "font-bold");
+      } else {
+        btn.classList.remove("text-primary", "font-bold");
+        btn.classList.add("text-on-surface-variant");
+      }
+    });
+
+    accommodationItems.forEach((item) => {
+      const category = item.dataset.category?.toLowerCase() ?? "";
+      const shouldShow = activeFilter === "all" || category === activeFilter;
+      item.hidden = !shouldShow;
+    });
+  }
+
+  filterButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const filter = btn.dataset.filter ?? "all";
+      setFilter(filter);
+    });
+  });
+</script>
