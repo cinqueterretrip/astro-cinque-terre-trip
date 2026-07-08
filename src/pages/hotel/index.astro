@@ -1,0 +1,46 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n/config";
+import { fetchHotelsCards } from "@/lib/sanity/queries/hotels";
+import AccommodationList from "@/models/AccommodationList.astro";
+
+type Image = {
+  alt?: string;
+  asset: {
+    _id: string;
+    url: string;
+    metadata: {
+      dimensions: { width: number; height: number };
+      lqip?: string;
+    };
+  };
+};
+
+interface Hotel {
+  _id: string;
+  language?: Locale;
+  title: string;
+  accommodationVillage?: { _type: string; village: string };
+  text?: [];
+  rating?: number;
+  linkBooking?: string;
+  posterImage: Image;
+}
+
+const lang = DEFAULT_LOCALE;
+const hotels: Hotel[] = await fetchHotelsCards(lang);
+---
+
+<BaseLayout
+  title="Hotel nelle Cinque Terre: i migliori alberghi dove soggiornare"
+  description="Scopri i migliori hotel e alberghi nelle Cinque Terre, dalle strutture con vista mare ai boutique hotel nel cuore dei borghi liguri di Monterosso, Vernazza e Riomaggiore."
+  locale={lang}
+>
+  <AccommodationList
+    lang={lang}
+    accommodations={hotels}
+    title="Dove Alloggiare"
+    subtitle="La Nostra Selezione di Hotel"
+    text="Scopri i migliori hotel nelle Cinque Terre: strutture selezionate nei borghi di Monterosso, Vernazza, Corniglia, Manarola e Riomaggiore, per vivere la riviera ligure con tutti i comfort."
+  />
+</BaseLayout>
