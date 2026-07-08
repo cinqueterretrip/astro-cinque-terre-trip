@@ -1,0 +1,51 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import type { Locale } from "@/lib/i18n/config";
+import { getLocalePaths } from "@/lib/i18n/paths";
+import { fetchHotelsCards } from "@/lib/sanity/queries/hotels";
+import AccommodationList from "@/models/AccommodationList.astro";
+
+type Image = {
+  alt?: string;
+  asset: {
+    _id: string;
+    url: string;
+    metadata: {
+      dimensions: { width: number; height: number };
+      lqip?: string;
+    };
+  };
+};
+
+interface Hotel {
+  _id: string;
+  language?: Locale;
+  title: string;
+  accommodationVillage?: { _type: string; village: string };
+  text?: [];
+  rating?: number;
+  linkBooking?: string;
+  posterImage: Image;
+}
+
+export function getStaticPaths() {
+  return getLocalePaths();
+}
+
+const lang = (Astro.currentLocale ?? "en") as Locale;
+const hotels: Hotel[] = await fetchHotelsCards(lang);
+---
+
+<BaseLayout
+  title="Hotels in Cinque Terre: Best Places to Stay on the Italian Riviera"
+  description="Discover the best hotels in Cinque Terre — from sea-view retreats to boutique stays in the heart of Monterosso, Vernazza, and Riomaggiore. Book your perfect stay today."
+  locale={lang}
+>
+  <AccommodationList
+    lang={lang}
+    accommodations={hotels}
+    title="Where to Stay"
+    subtitle="Our Handpicked Hotels"
+    text="Find the best hotels in Cinque Terre, carefully selected across the five villages of Monterosso, Vernazza, Corniglia, Manarola, and Riomaggiore — experience the Italian Riviera in comfort and style."
+  />
+</BaseLayout>

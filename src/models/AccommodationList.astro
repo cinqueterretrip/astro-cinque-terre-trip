@@ -58,6 +58,12 @@ const sortedAccommodations = [...accommodations].sort((a, b) => {
   return (b.rating ?? 0) - (a.rating ?? 0);
 });
 
+const presentVillages = VILLAGE_ORDER.filter((village) =>
+  accommodations.some(
+    (a) => a.accommodationVillage?.village?.toLowerCase() === village,
+  ),
+);
+
 const translations = {
   "booking.cta": {
     en: "Book Now",
@@ -113,36 +119,18 @@ const translations = {
         data-filter="all"
         aria-pressed="true">{translations["filter.all"][lang]}</button
       >
-      <button
-        type="button"
-        class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
-        data-filter="riomaggiore"
-        aria-pressed="false">Riomaggiore</button
-      >
-      <button
-        type="button"
-        class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
-        data-filter="manarola"
-        aria-pressed="false">Manarola</button
-      >
-      <button
-        type="button"
-        class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
-        data-filter="corniglia"
-        aria-pressed="false">Corniglia</button
-      >
-      <button
-        type="button"
-        class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
-        data-filter="vernazza"
-        aria-pressed="false">Vernazza</button
-      >
-      <button
-        type="button"
-        class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
-        data-filter="monterosso"
-        aria-pressed="false">Monterosso</button
-      >
+      {
+        presentVillages.map((village) => (
+          <button
+            type="button"
+            class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer capitalize"
+            data-filter={village}
+            aria-pressed="false"
+          >
+            {village}
+          </button>
+        ))
+      }
     </div>
   </section>
   <!-- Zig-Zag Accommodation List -->
