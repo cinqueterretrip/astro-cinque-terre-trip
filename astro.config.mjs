@@ -5,6 +5,13 @@ import { defineConfig, fontProviders } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import sanity from "@sanity/astro";
 import vercel from "@astrojs/vercel";
+import { loadEnv } from "vite";
+
+const { SANITY_STUDIO_PROJECT_ID, SANITY_STUDIO_DATASET } = loadEnv(
+  process.env.NODE_ENV ?? "development",
+  process.cwd(),
+  "",
+);
 
 // https://astro.build/config
 export default defineConfig({
@@ -43,8 +50,8 @@ export default defineConfig({
       },
     }),
     sanity({
-      projectId: import.meta.env.SANITY_STUDIO_PROJECT_ID,
-      dataset: import.meta.env.SANITY_STUDIO_DATASET,
+      projectId: SANITY_STUDIO_PROJECT_ID,
+      dataset: SANITY_STUDIO_DATASET,
       useCdn: false, // for static builds
     }),
   ],
