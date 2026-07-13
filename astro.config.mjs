@@ -7,7 +7,7 @@ import sanity from "@sanity/astro";
 import vercel from "@astrojs/vercel";
 import { loadEnv } from "vite";
 
-const { SANITY_STUDIO_PROJECT_ID, SANITY_STUDIO_DATASET } = loadEnv(
+const { SANITY_STUDIO_PROJECT_ID } = loadEnv(
   process.env.NODE_ENV ?? "development",
   process.cwd(),
   "",
@@ -51,7 +51,7 @@ export default defineConfig({
     }),
     sanity({
       projectId: SANITY_STUDIO_PROJECT_ID,
-      dataset: SANITY_STUDIO_DATASET,
+      dataset: "production",
       useCdn: false, // for static builds
     }),
   ],
