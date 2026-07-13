@@ -43,8 +43,8 @@ export default defineConfig({
       },
     }),
     sanity({
-      projectId: "3ykr9re0",
-      dataset: "production",
+      projectId: import.meta.env.SANITY_STUDIO_PROJECT_ID,
+      dataset: import.meta.env.SANITY_STUDIO_DATASET,
       useCdn: false, // for static builds
     }),
   ],
