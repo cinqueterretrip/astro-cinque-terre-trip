@@ -3,6 +3,7 @@ import "@/styles/global.css";
 import { Font } from "astro:assets";
 import Header from "@/header/Header.astro";
 import Footer from "@/layouts/Footer.astro";
+import Analytics from "@vercel/analytics/astro";
 import type { Locale } from "@/lib/i18n/config";
 
 interface Props {
@@ -89,6 +90,9 @@ const fullTitle = `${title} | Cinque Terre Trip`;
     <!-- Fonts -->
     <Font cssVariable="--font-playfair-display" preload />
     <Font cssVariable="--font-dm-sans" preload />
+
+    <!-- Vercel Analytics -->
+    <Analytics />
 
     <slot name="head" />
   </head>
